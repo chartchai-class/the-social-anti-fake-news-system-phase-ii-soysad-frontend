@@ -3,5 +3,6 @@ export interface UserAuth {
   name: string
   surname: string
   email: string
+  profileImageUrl: string
   roles: string[]
 }

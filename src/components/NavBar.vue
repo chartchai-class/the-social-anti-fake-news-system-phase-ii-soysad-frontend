@@ -17,24 +17,28 @@ function logout() {
   router.push({ name: 'login' })
 }
 </script>
-
 <template>
-  <header
-    class="backdrop-blur-md bg-white/70 dark:bg-slate-900/70 shadow-sm border-b border-gray-200/20 sticky top-0 z-50"
-  >
+  <header class="bg-zinc-900 border border-zinc-700 shadow-sm sticky top-0 z-50">
     <nav class="container mx-auto flex justify-between items-center px-6 py-4">
       <RouterLink
         :to="{ name: 'home' }"
-        class="text-2xl font-semibold text-gray-900 dark:text-white hover:text-green-500 transition-colors"
+        class="text-2xl font-semibold text-white hover:text-blue-400 transition-colors"
       >
-        SoySad !
+        SoYSaD
       </RouterLink>
 
       <ul v-if="isLoggedIn && currentUser" class="flex items-center space-x-4">
-        <li class="nav-item px-2 text-gray-900 dark:text-white">Hi, {{ currentUser.name }}</li>
+        <img
+          :src="currentUser.profileImageUrl"
+          alt="Profile"
+          class="w-10 h-10 rounded-full object-cover"
+        />
+        <li class="nav-item px-2 text-white">
+          Hi, {{ currentUser.name }} {{ currentUser.surname }}
+        </li>
         <li class="nav-item px-2">
           <a @click="logout" class="nav-link cursor-pointer">
-            <div class="flex items-center text-red-500 hover:text-red-700">
+            <div class="flex items-center text-red-400 hover:text-red-300">
               <SvgIcon type="mdi" :path="mdiLogout" />
               <span class="ml-3">Logout</span>
             </div>
@@ -45,7 +49,7 @@ function logout() {
       <ul v-else class="flex navbar-nav ml-auto">
         <li class="nav-item px-2">
           <router-link to="/register" class="nav-link">
-            <div class="flex items-center">
+            <div class="flex items-center text-white hover:text-blue-400">
               <SvgIcon type="mdi" :path="mdiAccountPlus" />
               <span class="ml-3">Sign Up</span>
             </div>
@@ -54,7 +58,7 @@ function logout() {
 
         <li class="nav-item px-2">
           <router-link to="/login" class="nav-link">
-            <div class="flex items-center">
+            <div class="flex items-center text-white hover:text-blue-400">
               <SvgIcon type="mdi" :path="mdiLogin" />
               <span class="ml-3">Login</span>
             </div>

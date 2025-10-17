@@ -49,6 +49,18 @@ export const useAuthStore = defineStore('auth', {
           return response
         })
     },
+    /* eslint-disable-next-line */
+    register(userInfo: any) {
+      return apiClient.post('/api/v1/auth/register', userInfo).then((response) => {
+        this.token = response.data.access_token
+        this.user = response.data.user
+
+        localStorage.setItem('access_token', this.token as string)
+        localStorage.setItem('user', JSON.stringify(this.user))
+
+        return response
+      })
+    },
     logout() {
       this.token = null
       this.user = null

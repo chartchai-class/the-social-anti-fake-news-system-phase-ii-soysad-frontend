@@ -3,7 +3,7 @@
 
 @layer base {
   html {
-    @apply bg-[#1d1d1f] text-white;
+    @apply bg-[#000000] text-white;
     font-family:
       -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
     color-scheme: light;
