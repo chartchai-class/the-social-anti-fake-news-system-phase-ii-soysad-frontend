@@ -13,17 +13,9 @@ const apiClient: AxiosInstance = axios.create({
   },
 })
 
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
-
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null as string | null,
+    token: localStorage.getItem('access_token') as string | null,
     user: (localStorage.getItem('user')
       ? JSON.parse(localStorage.getItem('user') as string)
       : null) as UserAuth | null,

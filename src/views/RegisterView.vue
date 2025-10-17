@@ -11,11 +11,10 @@ const authStore = useAuthStore()
 const currentStep = ref(1)
 const isSubmitting = ref(false)
 
-const defaultImage = 'https://st2.depositphotos.com/.../male-user-icon.jpg'
+const defaultImage = 'https://i.pinimg.com/236x/55/9b/b4/559bb468d3aaa734c6302dd286d27d69.jpg'
 const profileImageUrl = ref<string>(defaultImage)
 
 const uploadUrl = `${import.meta.env.VITE_BACKEND_URL}/uploadFile`
-const publicBase = import.meta.env.VITE_PUBLIC_IMAGE_BASE || ''
 
 const schema = yup.object({
   firstname: yup.string().required('First name is required'),
@@ -39,26 +38,29 @@ const goStep2 = handleSubmit(() => {
   currentStep.value = 2
 })
 
-async function submitRegistration() {
+function submitRegistration() {
   isSubmitting.value = true
 
-  try {
-    const payload = {
-      firstname: firstname.value,
-      lastname: lastname.value,
-      username: username.value,
-      email: email.value,
-      password: password.value,
-      profileImageUrl: profileImageUrl.value,
-    }
-
-    await authStore.register(payload)
-    router.push({ name: 'home' })
-  } catch (error) {
-    console.error('Registration failed:', error)
-  } finally {
-    isSubmitting.value = false
+  const payload = {
+    firstname: firstname.value,
+    lastname: lastname.value,
+    username: username.value,
+    email: email.value,
+    password: password.value,
+    profileImageUrl: profileImageUrl.value,
   }
+
+  authStore
+    .register(payload)
+    .then(() => {
+      router.push({ name: 'home' })
+    })
+    .catch((error) => {
+      console.error('Registration failed:', error)
+    })
+    .finally(() => {
+      isSubmitting.value = false
+    })
 }
 </script>
 
@@ -68,38 +70,54 @@ async function submitRegistration() {
       class="mx-auto w-full max-w-lg p-8 sm:p-12 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-xl"
     >
       <div v-if="currentStep === 1">
-        <h2 class="text-center text-2xl font-bold text-white mb-8">Create Your Account (1/2)</h2>
+        <h2 class="text-center text-2xl font-bold text-white mb-8">Create Your Account</h2>
+
         <form @submit.prevent="goStep2" class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
+              <InputText
+                v-model="firstname"
+                placeholder="First Name"
+                type="text"
+                :error="errors.firstname"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
+              <InputText
+                v-model="lastname"
+                placeholder="Last Name"
+                type="text"
+                :error="errors.lastname"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Username</label>
             <InputText
-              v-model="firstname"
-              placeholder="First Name"
+              v-model="username"
+              placeholder="Username"
               type="text"
-              :error="errors.firstname"
-            />
-            <InputText
-              v-model="lastname"
-              placeholder="Last Name"
-              type="text"
-              :error="errors.lastname"
+              :error="errors.username"
             />
           </div>
 
-          <InputText
-            v-model="username"
-            placeholder="Username"
-            type="text"
-            :error="errors.username"
-          />
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+            <InputText v-model="email" placeholder="Email" type="email" :error="errors.email" />
+          </div>
 
-          <InputText v-model="email" placeholder="Email" type="email" :error="errors.email" />
-
-          <InputText
-            v-model="password"
-            placeholder="Password"
-            type="password"
-            :error="errors.password"
-          />
+          <div class="mb-10">
+            <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+            <InputText
+              v-model="password"
+              placeholder="Password"
+              type="password"
+              :error="errors.password"
+            />
+          </div>
 
           <button
             type="submit"
@@ -111,19 +129,17 @@ async function submitRegistration() {
       </div>
 
       <div v-else>
-        <h2 class="text-center text-2xl font-bold text-white mb-6">
-          Set Your Profile Picture (2/2)
-        </h2>
+        <h2 class="text-center text-2xl font-bold text-white mb-6">Set Your Profile Picture</h2>
         <div class="flex flex-col items-center gap-6">
           <p class="text-sm text-gray-400">Upload your profile picture (optional)</p>
 
           <div
             class="w-40 h-40 rounded-full overflow-hidden bg-zinc-800 border-4 border-indigo-600 flex items-center justify-center flex-shrink-0"
           >
-            <img :src="profileImageUrl" :alt="'Profile'" class="w-full h-full object-cover" />
+            <img :src="profileImageUrl" class="w-full h-full object-cover" />
           </div>
 
-          <ImageUpload v-model="profileImageUrl" :server="uploadUrl" :publicBase="publicBase" />
+          <ImageUpload v-model="profileImageUrl" :server="uploadUrl" />
 
           <div class="w-full flex gap-4 justify-between">
             <button
@@ -138,7 +154,7 @@ async function submitRegistration() {
               :disabled="isSubmitting"
               class="flex-1 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold disabled:opacity-50"
             >
-              {{ isSubmitting ? 'Registering...' : 'Finish Registration' }}
+              Confirm
             </button>
           </div>
         </div>

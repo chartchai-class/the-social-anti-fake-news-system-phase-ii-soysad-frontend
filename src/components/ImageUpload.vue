@@ -3,55 +3,70 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   server: string
-  publicBase?: string
   modelValue?: string
 }>()
 
 const emit = defineEmits<{ (e: 'update:modelValue', v: string): void }>()
 
 const isUploading = ref(false)
-const previewUrl = ref<string>('')
+// const previewUrl = ref<string>('')
 
-const handleFileSelect = async (event: Event) => {
+const uploadImage = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData()
+    formData.append('image', file)
+
+    fetch(props.server, {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+        return response.text()
+      })
+      .then((imageUrl) => {
+        const cleanedUrl = imageUrl.trim().replace(/\s+/g, '')
+        if (cleanedUrl.startsWith('http')) {
+          resolve(cleanedUrl)
+        } else {
+          reject(new Error('Invalid URL returned'))
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+const handleFileSelect = (event: Event) => {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
 
   if (!file) return
 
+  isUploading.value = true
+
   const reader = new FileReader()
   reader.onload = (e) => {
-    previewUrl.value = e.target?.result as string
+    const tempPreviewUrl = e.target?.result as string
+    emit('update:modelValue', tempPreviewUrl)
   }
   reader.readAsDataURL(file)
 
-  isUploading.value = true
-
-  try {
-    const formData = new FormData()
-    formData.append('image', file)
-
-    const response = await fetch(props.server, {
-      method: 'POST',
-      body: formData,
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`)
-    }
-
-    const imageUrl = await response.text()
-    const cleanedUrl = imageUrl.trim().replace(/\s+/g, '')
-
-    if (cleanedUrl.startsWith('http')) {
-      emit('update:modelValue', cleanedUrl)
-      previewUrl.value = ''
+  uploadImage(file)
+    .then((finalUrl) => {
+      emit('update:modelValue', finalUrl)
       input.value = ''
-    }
-  } catch (error) {
-    console.error('Upload failed:', error)
-  } finally {
-    isUploading.value = false
-  }
+    })
+    .catch((error) => {
+      console.error('Upload failed:', error)
+      // emit('update:modelValue', 'https://st2.depositphotos.com/.../male-user-icon.jpg')
+    })
+    .finally(() => {
+      isUploading.value = false
+    })
 }
 </script>
 
@@ -77,9 +92,5 @@ const handleFileSelect = async (event: Event) => {
         </div>
       </div>
     </label>
-
-    <div v-if="previewUrl" class="w-40 h-40 rounded-lg overflow-hidden border-2 border-indigo-500">
-      <img :src="previewUrl" :alt="'preview'" class="w-full h-full object-cover" />
-    </div>
   </div>
 </template>

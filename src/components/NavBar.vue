@@ -22,7 +22,7 @@ function logout() {
     <nav class="container mx-auto flex justify-between items-center px-6 py-4">
       <RouterLink
         :to="{ name: 'home' }"
-        class="text-2xl font-semibold text-white hover:text-blue-400 transition-colors"
+        class="text-2xl font-semibold text-white hover:text-indigo-600 transition-colors"
       >
         SoYSaD
       </RouterLink>
@@ -49,7 +49,7 @@ function logout() {
       <ul v-else class="flex navbar-nav ml-auto">
         <li class="nav-item px-2">
           <router-link to="/register" class="nav-link">
-            <div class="flex items-center text-white hover:text-blue-400">
+            <div class="flex items-center text-white hover:text-indigo-600">
               <SvgIcon type="mdi" :path="mdiAccountPlus" />
               <span class="ml-3">Sign Up</span>
             </div>
@@ -58,7 +58,7 @@ function logout() {
 
         <li class="nav-item px-2">
           <router-link to="/login" class="nav-link">
-            <div class="flex items-center text-white hover:text-blue-400">
+            <div class="flex items-center text-white hover:text-indigo-600">
               <SvgIcon type="mdi" :path="mdiLogin" />
               <span class="ml-3">Login</span>
             </div>

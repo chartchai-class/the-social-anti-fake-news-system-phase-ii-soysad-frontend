@@ -47,10 +47,10 @@ const onSubmit = handleSubmit((values) => {
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           class="mx-auto h-50 w-auto"
-          src="https://videos.openai.com/az/vg-assets/assets%2Ftask_01k7rbtvzhezyad9cycqx93709%2F1760680644_img_1.webp?se=2025-10-23T05%3A57%3A32Z&sp=r&sv=2024-08-04&sr=b&skoid=8ffff87a-01f1-47c9-9090-32999d4d6380&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-17T04%3A25%3A51Z&ske=2025-10-24T04%3A30%3A51Z&sks=b&skv=2024-08-04&sig=a632ahOOkCwLnceyFHJautGTOVGY0qcDe1fa2RvT/i0%3D&ac=oaivgprodscus"
+          src="https://xapqrepwfmjcrtcsmqzh.supabase.co/storage/v1/object/public/sadboy/funny-beluga-meme-cat-hd-transparent-background-735811696675541naaswhla0k__1_-removebg-preview.png"
         />
-        <h2 class="mt-1 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-          Sign in to your account
+        <h2 class="mt-1 text-center text-3xl font-bold leading-9 tracking-tight text-white">
+          Log in to your account
         </h2>
       </div>
 
