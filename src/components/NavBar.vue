@@ -18,7 +18,9 @@ function logout() {
 }
 </script>
 <template>
-  <header class="bg-zinc-900 border border-zinc-800 shadow-sm sticky top-0 z-50">
+  <header
+    class="bg-zinc-900/40 backdrop-blur-sm border border-zinc-800 shadow-sm sticky top-0 z-50"
+  >
     <nav class="container mx-auto flex justify-between items-center px-6 py-4">
       <RouterLink
         :to="{ name: 'home' }"
@@ -28,11 +30,7 @@ function logout() {
       </RouterLink>
 
       <ul v-if="isLoggedIn && currentUser" class="flex items-center space-x-4">
-        <img
-          :src="currentUser.profileImageUrl"
-          alt="Profile"
-          class="w-10 h-10 rounded-full object-cover"
-        />
+        <img :src="currentUser.profileImageUrl" class="w-10 h-10 rounded-full object-cover" />
         <li class="nav-item px-2 text-white">
           Hi, {{ currentUser.name }} {{ currentUser.surname }} ({{ currentUser.roles.join(', ') }})
         </li>

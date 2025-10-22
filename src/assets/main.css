@@ -4,7 +4,7 @@
 @layer base {
   html {
     @apply text-white;
-    background-image: url('https://xapqrepwfmjcrtcsmqzh.supabase.co/storage/v1/object/public/sadboy/rrt1.jpg');
+    background-image: url('https://xapqrepwfmjcrtcsmqzh.supabase.co/storage/v1/object/public/sadboy/aaaaaaaaa.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -13,4 +13,10 @@
       -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
     color-scheme: light;
   }
+}
+
+#nprogress .bar {
+  background: #5001ce !important;
+
+  height: 7px !important;
 }

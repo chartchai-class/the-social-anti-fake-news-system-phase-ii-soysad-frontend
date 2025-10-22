@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NewListView from '@/views/NewListView.vue'
+import NProgress from 'nprogress'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,5 +22,12 @@ const router = createRouter({
     },
   ],
 })
+NProgress.configure({ showSpinner: false })
+router.beforeEach(() => {
+  NProgress.start()
+})
 
+router.afterEach(() => {
+  NProgress.done()
+})
 export default router

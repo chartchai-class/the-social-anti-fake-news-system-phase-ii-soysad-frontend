@@ -16,30 +16,38 @@ const formatDate = (dateString: string | null | undefined) => {
 
 <template>
   <div
-    class="bg-zinc-900 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+    class="bg-zinc-900/40 border border-zinc-800 backdrop-blur-sm rounded-2xl shadow-md overflow-hidden"
   >
-    <img
-      :src="news.mainImageUrl"
-      alt="News Image"
-      class="w-full h-60 object-cover"
-      v-if="news.mainImageUrl"
-    />
+    <img :src="news.mainImageUrl" class="w-full h-65 object-cover" v-if="news.mainImageUrl" />
+
+    <div
+      v-if="news.status === 'FAKE'"
+      class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-amber-500"
+    >
+      FAKE
+    </div>
+    <div
+      v-else-if="news.status"
+      class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
+    >
+      REAL
+    </div>
 
     <div class="p-4">
       <h3 class="font-bold text-lg mb-2">{{ news.topic }}</h3>
       <p class="text-gray-400 text-sm mb-4">{{ news.shortDetail }}</p>
 
-      <div class="flex justify-between items-center text-xs text-gray-500">
+      <div class="flex justify-between items-center text-xs text-gray-400">
         <span>By: {{ news.reporter }}</span>
 
         <span>{{ formatDate(news.publishedAt) }}</span>
       </div>
 
-      <span
-        class_="mt-2 inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
+      <!-- <span
+        class="mt-2 inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
       >
         {{ news.status }} (F: {{ news.fakeCount }}, NF: {{ news.notFakeCount }})
-      </span>
+      </span> -->
     </div>
   </div>
 </template>

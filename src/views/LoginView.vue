@@ -41,7 +41,7 @@ const onSubmit = handleSubmit((values) => {
 <template>
   <div class="flex min-h-full flex-col justify-center shadow-sm px-6 py-12 lg:px-8">
     <div
-      class="mx-auto w-full max-w-lg p-12 bg-zinc-900 border border-zinc-700 rounded-4xl shadow-xl"
+      class="mx-auto w-full max-w-lg p-12 bg-zinc-900/20 backdrop-blur-sm border border-zinc-800 rounded-4xl shadow-xl"
     >
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <img

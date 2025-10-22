@@ -8,10 +8,10 @@ import AppFooter from './components/AppFooter.vue'
   <div class="min-h-screen flex flex-col">
     <Navbar />
 
-    <main class="flex-1">
+    <main class="flex-1 mb-4">
       <RouterView />
     </main>
 
-    <AppFooter class="mt-auto" />
+    <AppFooter />
   </div>
 </template>
