@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import InputText from '@/components/InputText.vue'
 import * as yup from 'yup'
-
 import { useField, useForm } from 'vee-validate'
 import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
@@ -50,7 +49,7 @@ const onSubmit = handleSubmit((values) => {
           src="https://xapqrepwfmjcrtcsmqzh.supabase.co/storage/v1/object/public/sadboy/funny-beluga-meme-cat-hd-transparent-background-735811696675541naaswhla0k__1_-removebg-preview.png"
         />
         <h2 class="mt-1 text-center text-3xl font-bold leading-9 tracking-tight text-white">
-          Log in to your account
+          Log in to your account !!
         </h2>
       </div>
 
@@ -73,11 +72,6 @@ const onSubmit = handleSubmit((values) => {
               <label for="password" class="block text-sm font-medium leading-6 text-white"
                 >Password</label
               >
-              <div class="text-sm">
-                <a href="#" class="font-semibold text-indigo-400 hover:text-indigo-300"
-                  >Forgot password?</a
-                >
-              </div>
             </div>
             <div class="mt-2">
               <InputText
@@ -101,8 +95,10 @@ const onSubmit = handleSubmit((values) => {
 
         <p class="mt-10 text-center text-sm text-gray-400">
           Not a member?
-          <a href="#" class="font-semibold leading-6 text-indigo-400 hover:text-indigo-300"
-            >Try to register here</a
+          <router-link
+            to="/register"
+            class="font-semibold leading-6 text-indigo-400 hover:text-indigo-300"
+            >Try to register here</router-link
           >
         </p>
       </div>

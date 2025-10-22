@@ -2,7 +2,6 @@
 interface ErrorMessageProps {
   id: string
 }
-
 defineProps<ErrorMessageProps>()
 </script>
 

@@ -18,7 +18,7 @@ function logout() {
 }
 </script>
 <template>
-  <header class="bg-zinc-900 border border-zinc-700 shadow-sm sticky top-0 z-50">
+  <header class="bg-zinc-900 border border-zinc-800 shadow-sm sticky top-0 z-50">
     <nav class="container mx-auto flex justify-between items-center px-6 py-4">
       <RouterLink
         :to="{ name: 'home' }"
@@ -34,7 +34,7 @@ function logout() {
           class="w-10 h-10 rounded-full object-cover"
         />
         <li class="nav-item px-2 text-white">
-          Hi, {{ currentUser.name }} {{ currentUser.surname }}
+          Hi, {{ currentUser.name }} {{ currentUser.surname }} ({{ currentUser.roles.join(', ') }})
         </li>
         <li class="nav-item px-2">
           <a @click="logout" class="nav-link cursor-pointer">
