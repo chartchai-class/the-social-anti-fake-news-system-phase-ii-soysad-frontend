@@ -16,21 +16,27 @@ const formatDate = (dateString: string | null | undefined) => {
 
 <template>
   <div
-    class="bg-zinc-900/40 border border-zinc-800 backdrop-blur-sm rounded-2xl shadow-md overflow-hidden"
+    class="bg-zinc-900/70 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden"
   >
     <img :src="news.mainImageUrl" class="w-full h-65 object-cover" v-if="news.mainImageUrl" />
 
     <div
       v-if="news.status === 'FAKE'"
-      class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-amber-500"
+      class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-amber-600"
     >
       FAKE
     </div>
     <div
-      v-else-if="news.status"
+      v-else-if="news.status === 'NOT_FAKE'"
       class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
     >
       REAL
+    </div>
+    <div
+      v-else-if="news.status === 'UNVERIFIED'"
+      class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-gray-500"
+    >
+      UNVERIFIED
     </div>
 
     <div class="p-4">

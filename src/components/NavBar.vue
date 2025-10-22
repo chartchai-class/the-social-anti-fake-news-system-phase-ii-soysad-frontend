@@ -19,7 +19,7 @@ function logout() {
 </script>
 <template>
   <header
-    class="bg-zinc-900/40 backdrop-blur-sm border border-zinc-800 shadow-sm sticky top-0 z-50"
+    class="bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 shadow-sm sticky top-0 z-50"
   >
     <nav class="container mx-auto flex justify-between items-center px-6 py-4">
       <RouterLink

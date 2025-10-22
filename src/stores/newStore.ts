@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import { getNewsList } from '@/services/NewService'
-import type { NewsHomepage, Page } from '@/types'
+import { type NewsHomepage, type Page, NewsFilter } from '@/types'
 
 interface NewsState {
   newsPage: Page<NewsHomepage> | null
   isLoading: boolean
   limit: number
+  currentFilter: NewsFilter
 }
 
 export const useNewsStore = defineStore('news', {
@@ -13,6 +14,7 @@ export const useNewsStore = defineStore('news', {
     newsPage: null,
     isLoading: false,
     limit: 12,
+    currentFilter: NewsFilter.ALL,
   }),
 
   getters: {
@@ -21,12 +23,13 @@ export const useNewsStore = defineStore('news', {
     totalPages: (state) => state.newsPage?.totalPages || 0,
     currentPage: (state) => state.newsPage?.number || 0,
     currentLimit: (state) => state.limit,
+    getCurrentFilter: (state) => state.currentFilter,
   },
 
   actions: {
     fetchNews(page: number) {
       this.isLoading = true
-      return getNewsList(page, this.limit)
+      return getNewsList(page, this.limit, this.currentFilter)
         .then((response) => {
           this.newsPage = response.data
         })
@@ -46,6 +49,11 @@ export const useNewsStore = defineStore('news', {
     setLimit(newLimit: number) {
       this.limit = newLimit
       this.fetchNews(0) //
+    },
+
+    setFilter(filter: NewsFilter) {
+      this.currentFilter = filter
+      this.fetchNews(0)
     },
   },
 })

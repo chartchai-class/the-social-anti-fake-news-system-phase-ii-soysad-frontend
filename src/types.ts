@@ -14,6 +14,12 @@ export enum NewsStatus {
   UNVERIFIED = 'UNVERIFIED',
 }
 
+export enum NewsFilter {
+  ALL = 'ALL',
+  FAKE = 'FAKE',
+  NOT_FAKE = 'NOT_FAKE',
+}
+
 export interface NewsHomepage {
   id: number
   slug: string
