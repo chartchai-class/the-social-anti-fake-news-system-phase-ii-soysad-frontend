@@ -7,6 +7,7 @@ interface NewsState {
   isLoading: boolean
   limit: number
   currentFilter: NewsFilter
+  searchKeyword: string
 }
 
 export const useNewsStore = defineStore('news', {
@@ -15,6 +16,7 @@ export const useNewsStore = defineStore('news', {
     isLoading: false,
     limit: 12,
     currentFilter: NewsFilter.ALL,
+    searchKeyword: '',
   }),
 
   getters: {
@@ -24,12 +26,13 @@ export const useNewsStore = defineStore('news', {
     currentPage: (state) => state.newsPage?.number || 0,
     currentLimit: (state) => state.limit,
     getCurrentFilter: (state) => state.currentFilter,
+    getSearchKeyword: (state) => state.searchKeyword,
   },
 
   actions: {
     fetchNews(page: number) {
       this.isLoading = true
-      return getNewsList(page, this.limit, this.currentFilter)
+      return getNewsList(page, this.limit, this.currentFilter, this.searchKeyword)
         .then((response) => {
           this.newsPage = response.data
         })
@@ -48,11 +51,15 @@ export const useNewsStore = defineStore('news', {
 
     setLimit(newLimit: number) {
       this.limit = newLimit
-      this.fetchNews(0) //
+      this.fetchNews(0)
     },
 
     setFilter(filter: NewsFilter) {
       this.currentFilter = filter
+      this.fetchNews(0)
+    },
+    setSearch(keyword: string) {
+      this.searchKeyword = keyword
       this.fetchNews(0)
     },
   },

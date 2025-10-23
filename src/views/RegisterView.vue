@@ -6,14 +6,11 @@ import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
 import ImageUpload from '@/components/ImageUpload.vue'
 import InputText from '@/components/InputText.vue'
-
 const authStore = useAuthStore()
 const currentStep = ref(1)
 const isSubmitting = ref(false)
-
 const defaultImage = 'https://i.pinimg.com/236x/55/9b/b4/559bb468d3aaa734c6302dd286d27d69.jpg'
 const profileImageUrl = ref<string>(defaultImage)
-
 const uploadUrl = `${import.meta.env.VITE_BACKEND_URL}/uploadFile`
 
 const schema = yup.object({
@@ -67,7 +64,7 @@ function submitRegistration() {
 <template>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div
-      class="mx-auto w-full max-w-lg p-8 sm:p-12 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-xl"
+      class="mx-auto w-full max-w-lg p-8 sm:p-12 bg-zinc-900/60 black-drop-sm border border-zinc-700 rounded-2xl shadow-xl"
     >
       <div v-if="currentStep === 1">
         <h2 class="text-center text-2xl font-bold text-white mb-8">Create Your Account</h2>

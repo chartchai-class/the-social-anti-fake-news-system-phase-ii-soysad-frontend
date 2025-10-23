@@ -14,7 +14,6 @@ const currentUser = computed(() => authStore.currentUser)
 
 function logout() {
   authStore.logout()
-  router.push({ name: 'login' })
 }
 </script>
 <template>

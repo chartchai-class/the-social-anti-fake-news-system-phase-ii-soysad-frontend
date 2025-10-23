@@ -16,7 +16,7 @@ const formatDate = (dateString: string | null | undefined) => {
 
 <template>
   <div
-    class="bg-zinc-900/70 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden"
+    class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden"
   >
     <img :src="news.mainImageUrl" class="w-full h-65 object-cover" v-if="news.mainImageUrl" />
 
@@ -41,9 +41,9 @@ const formatDate = (dateString: string | null | undefined) => {
 
     <div class="p-4">
       <h3 class="font-bold text-lg mb-2">{{ news.topic }}</h3>
-      <p class="text-gray-400 text-sm mb-4">{{ news.shortDetail }}</p>
+      <p class="text-gray-500 text-sm mb-4">{{ news.shortDetail }}</p>
 
-      <div class="flex justify-between items-center text-xs text-gray-400">
+      <div class="flex justify-between items-center text-xs text-gray-500">
         <span>By: {{ news.reporter }}</span>
 
         <span>{{ formatDate(news.publishedAt) }}</span>
