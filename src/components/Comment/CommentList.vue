@@ -67,7 +67,7 @@ watch(() => props.comments, () => { page.value = 1 })
           v-model.number="selectedSize"
           class="rounded-lg border border-zinc-700 bg-zinc-900/60 text-zinc-100 px-2.5 py-1.5 text-sm outline-none hover:bg-zinc-800/70 focus:ring-1 focus:ring-emerald-500"
         >
-          <option v-for="n in PER_PAGE_OPTIONS" :key="n" :value="n">{{ n }}</option>
+          <option v-for="number in PER_PAGE_OPTIONS" :key="number" :value="number">{{ number }}</option>
         </select>
       </label>
     </div>
