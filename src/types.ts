@@ -39,3 +39,26 @@ export interface Page<T> {
   size: number
   number: number
 }
+
+// create news
+export interface NewsSave {
+  topic: string
+  shortDetail: string
+  fullDetail: string
+  mainImageUrl: string
+}
+
+export interface NewsDetail {
+  id: number
+  slug: string
+  topic: string
+  shortDetail: string
+  fullDetail: string
+  mainImageUrl: string
+  reporter: UserAuth
+  publishedAt: string
+  status: NewsStatus
+  fakeCount: number
+  notFakeCount: number
+  comments: Comment[]
+}

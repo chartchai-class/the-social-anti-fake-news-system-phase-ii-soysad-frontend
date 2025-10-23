@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NewListView from '@/views/NewListView.vue'
+import { useAuthStore } from '@/stores/auth'
 import NProgress from 'nprogress'
 
 const router = createRouter({
@@ -19,6 +20,20 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: () => import('@/views/RegisterView.vue'),
+    },
+    {
+      path: '/create-news',
+      name: 'create-news',
+      component: () => import('../views/CreateNewsView.vue'),
+
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore()
+        if (authStore.isLoggedIn && (authStore.isMember || authStore.isAdmin)) {
+          next()
+        } else {
+          next({ name: 'home' })
+        }
+      },
     },
   ],
 })

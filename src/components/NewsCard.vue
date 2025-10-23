@@ -16,7 +16,7 @@ const formatDate = (dateString: string | null | undefined) => {
 
 <template>
   <div
-    class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden"
+    class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-xl/40 overflow-hidden"
   >
     <img :src="news.mainImageUrl" class="w-full h-65 object-cover" v-if="news.mainImageUrl" />
 
@@ -30,7 +30,7 @@ const formatDate = (dateString: string | null | undefined) => {
       v-else-if="news.status === 'NOT_FAKE'"
       class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
     >
-      REAL
+      NON-FAKE
     </div>
     <div
       v-else-if="news.status === 'UNVERIFIED'"
@@ -52,7 +52,7 @@ const formatDate = (dateString: string | null | undefined) => {
       <!-- <span
         class="mt-2 inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
       >
-        {{ news.status }} (F: {{ news.fakeCount }}, NF: {{ news.notFakeCount }})
+        {{ news.status }} (F: {{ news.fakeCount }} NF: {{ news.notFakeCount }})
       </span> -->
     </div>
   </div>

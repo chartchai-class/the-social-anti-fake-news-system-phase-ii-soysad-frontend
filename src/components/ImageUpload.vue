@@ -1,22 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
-const props = defineProps<{
-  server: string
-  modelValue?: string
+const uploadUrl = `${import.meta.env.VITE_BACKEND_URL}/uploadFile`
+const emit = defineEmits<{
+  (e: 'update:modelValue', v: string): void
 }>()
 
-const emit = defineEmits<{ (e: 'update:modelValue', v: string): void }>()
-
 const isUploading = ref(false)
-// const previewUrl = ref<string>('')
 
 const uploadImage = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const formData = new FormData()
     formData.append('image', file)
 
-    fetch(props.server, {
+    fetch(uploadUrl, {
       method: 'POST',
       body: formData,
     })
@@ -51,6 +47,7 @@ const handleFileSelect = (event: Event) => {
   const reader = new FileReader()
   reader.onload = (e) => {
     const tempPreviewUrl = e.target?.result as string
+
     emit('update:modelValue', tempPreviewUrl)
   }
   reader.readAsDataURL(file)
@@ -62,7 +59,6 @@ const handleFileSelect = (event: Event) => {
     })
     .catch((error) => {
       console.error('Upload failed:', error)
-      // emit('update:modelValue', 'https://st2.depositphotos.com/.../male-user-icon.jpg')
     })
     .finally(() => {
       isUploading.value = false

@@ -9,9 +9,9 @@ import InputText from '@/components/InputText.vue'
 const authStore = useAuthStore()
 const currentStep = ref(1)
 const isSubmitting = ref(false)
-const defaultImage = 'https://i.pinimg.com/236x/55/9b/b4/559bb468d3aaa734c6302dd286d27d69.jpg'
-const profileImageUrl = ref<string>(defaultImage)
-const uploadUrl = `${import.meta.env.VITE_BACKEND_URL}/uploadFile`
+const defaultProfileImage =
+  'https://i.pinimg.com/236x/55/9b/b4/559bb468d3aaa734c6302dd286d27d69.jpg'
+const profileImageUrl = ref<string>(defaultProfileImage)
 
 const schema = yup.object({
   firstname: yup.string().required('First name is required'),
@@ -136,7 +136,7 @@ function submitRegistration() {
             <img :src="profileImageUrl" class="w-full h-full object-cover" />
           </div>
 
-          <ImageUpload v-model="profileImageUrl" :server="uploadUrl" />
+          <ImageUpload v-model="profileImageUrl" />
 
           <div class="w-full flex gap-4 justify-between">
             <button

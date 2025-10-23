@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { getNewsList } from '@/services/NewService'
-import { type NewsHomepage, type Page, NewsFilter } from '@/types'
+import { getNewsList, addNews } from '@/services/NewService'
+import { type NewsHomepage, type Page, NewsFilter, type NewsDetail, type NewsSave } from '@/types'
 
 interface NewsState {
   newsPage: Page<NewsHomepage> | null
@@ -61,6 +61,16 @@ export const useNewsStore = defineStore('news', {
     setSearch(keyword: string) {
       this.searchKeyword = keyword
       this.fetchNews(0)
+    },
+    createNews(payload: NewsSave): Promise<NewsDetail> {
+      return addNews(payload)
+        .then((response) => {
+          return response.data
+        })
+        .catch((error) => {
+          console.error('Error in createNews action:', error)
+          throw error
+        })
     },
   },
 })

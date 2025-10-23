@@ -3,7 +3,7 @@ import UniqueID from '@/utils/UniqueID'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 import { computed } from 'vue'
 
-const modelValue = defineModel()
+const modelValue = defineModel<string>()
 
 interface Props {
   placeholder?: string
@@ -35,7 +35,20 @@ const isError = computed(() => {
 <template>
   <div>
     <div class="mt-2">
+      <textarea
+        v-if="props.type === 'textarea'"
+        :id="uuid"
+        :class="placeholderErrorClass"
+        :placeholder="placeholder"
+        v-bind="$attrs"
+        v-model="modelValue"
+        :aria-describedby="error ? `${uuid}-error` : undefined"
+        :aria-invalid="error ? true : false"
+        rows="3"
+      ></textarea>
+
       <input
+        v-else
         :type="type"
         :id="uuid"
         :class="placeholderErrorClass"
