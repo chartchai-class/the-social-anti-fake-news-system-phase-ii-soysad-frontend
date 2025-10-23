@@ -25,3 +25,17 @@ export function getNewsList(page: number, size: number, status: NewsFilter, keyw
 export function addNews(payload: NewsSave) {
   return apiClient.post<NewsDetail>('/news', payload)
 }
+
+export function getNewsDetail(id: number) {
+  return apiClient
+    .get<NewsDetail>(`/news/id/${id}`)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error('Error fetching news detail:', err)
+      throw err
+    })
+}
+
+export function getNewsDetailBySlug(slug: string) {
+  return apiClient.get<NewsDetail>(`/news/slug/${slug}`)
+}
