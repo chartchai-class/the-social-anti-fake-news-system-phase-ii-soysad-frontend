@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios, { type AxiosInstance } from 'axios'
 // import { log } from 'console'
-import router from '@/router'
+// import router from '@/router'
 import { type UserAuth } from '@/types'
 
 const apiClient: AxiosInstance = axios.create({
@@ -24,6 +24,7 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: (state) => !!state.token,
     currentUser: (state) => state.user,
     isAdmin: (state) => state.user?.roles.includes('ADMIN') || false,
+    isMember: (state) => state.user?.roles.includes('MEMBER') || false,
   },
 
   actions: {
@@ -58,7 +59,6 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       localStorage.removeItem('access_token')
       localStorage.removeItem('user')
-      router.push({ name: 'login' })
     },
   },
 })

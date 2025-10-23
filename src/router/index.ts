@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NewListView from '@/views/NewListView.vue'
+import { useAuthStore } from '@/stores/auth'
 import NProgress from 'nprogress'
-import NewsDetailView from '@/views/NewsDetail/NewsDetailFrame.vue'
+// import NewsDetailView from '@/views/NewsDetail/NewsDetailFrame.vue'
 import TestDetailView from '@/views/NewsDetail/DetailView.vue'
 
 const router = createRouter({
@@ -23,10 +24,24 @@ const router = createRouter({
       component: () => import('@/views/RegisterView.vue'),
     },
     {
+      path: '/create-news',
+      name: 'create-news',
+      component: () => import('../views/CreateNewsView.vue'),
+
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore()
+        if (authStore.isLoggedIn && (authStore.isMember || authStore.isAdmin)) {
+          next()
+        } else {
+          next({ name: 'home' })
+        }
+      },
+    },
+    {
       path: '/news/:id',
       name: 'news-detail',
       component: TestDetailView,
-    }
+    },
   ],
 })
 NProgress.configure({ showSpinner: false })

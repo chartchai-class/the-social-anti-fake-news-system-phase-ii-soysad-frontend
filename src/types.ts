@@ -50,18 +50,18 @@ export interface NewsDetail {
   notFakeCount: number
 }
 
-export interface Comments{
+export interface Comments {
   id: number
-  author : UserAuth
-  body : string
+  author: UserAuth
+  body: string
   createdAt: string
   updatedAt: string
-  voteType : VoteType
+  voteType: VoteType
   attachments: string[]
   version: number
 }
 
-export enum VoteType{
+export enum VoteType {
   FAKE = 'FAKE',
   NOT_FAKE = 'NOT_FAKE',
 }
@@ -77,11 +77,18 @@ export interface Reporter {
   enabled: boolean
 }
 
-
 export interface Page<T> {
   content: T[]
   totalPages: number
   totalElements: number
   size: number
   number: number
+}
+
+// create news
+export interface NewsSave {
+  topic: string
+  shortDetail: string
+  fullDetail: string
+  mainImageUrl: string
 }

@@ -6,15 +6,22 @@ import { storeToRefs } from 'pinia'
 import NewsCard from '@/components/NewsCard.vue'
 // @ts-ignore
 import SvgIcon from '@jamescoyle/vue-icon'
+import SkeletonNewsList from '@/components/SkeltonNewList.vue'
 import {
   mdiChevronLeft,
   mdiChevronRight,
   mdiNewspaper,
   mdiAlertCircle,
   mdiCheckCircle,
-  mdiMagnify,
+  mdiPlusBox,
 } from '@mdi/js'
 import { NewsFilter } from '@/types'
+
+// import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const { isLoggedIn, isMember, isAdmin } = storeToRefs(authStore)
 
 const newsStore = useNewsStore()
 const { allNews, loadingStatus, totalPages, currentPage, currentLimit, getCurrentFilter } =
@@ -33,6 +40,7 @@ watch(keyWord, (newKeyword) => {
     setSearch(newKeyword)
   }, 500)
 })
+
 watch(keyWord, () => {
   if (getCurrentFilter.value !== NewsFilter.ALL) {
     setFilter(NewsFilter.ALL)
@@ -52,56 +60,68 @@ onMounted(() => {
 <template>
   <main class="container mx-auto p-4">
     <h1 class="text-3xl font-bold text-center mt-4 mb-4">Social Anti-Fake News</h1>
+
     <div class="my-6 max-w-lg mx-auto">
       <div class="relative">
         <input
           type="text"
-          id="search-input"
           v-model="keyWord"
           placeholder="Search by topic, detail, or reporter..."
-          class="w-full p-3 pl-12 rounded-full backdrop-blur-sm bg-zinc-200/20 text-white placeholder-white/40 border-0 focus:ring-2 focus:ring-white/50"
+          class="w-full px-1 py-3 pl-8 rounded-full backdrop-blur-sm shadow-xl/30 bg-zinc-200/20 text-white placeholder-white/40 border-0 focus:ring-2 focus:ring-white/50"
         />
       </div>
     </div>
 
     <div class="flex flex-row flex-wrap justify-between items-center gap-4 mb-6">
-      <div class="flex gap-2 justify-center md:justify-start">
+      <div class="flex gap-2 justify-center md:justify-start flex-wrap">
         <button
           @click="setFilter(NewsFilter.ALL)"
           :class="[
-            'px-4 py-2 rounded-full font-medium backdrop-blur-sm flex items-center gap-1',
+            'px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30',
             getCurrentFilter === NewsFilter.ALL
               ? 'bg-white  text-black shadow-lg'
               : 'bg-gray-200/20 text-white hover:bg-gray-200/30',
           ]"
         >
-          <SvgIcon type="mdi" :path="mdiNewspaper" :size="20" />
-          All News
+          <SvgIcon type="mdi" :path="mdiNewspaper" :size="16" class="md:!w-5 md:!h-5" />
+          <span class="hidden sm:inline">All News</span>
         </button>
         <button
           @click="setFilter(NewsFilter.FAKE)"
           :class="[
-            'px-4 py-2 rounded-full font-medium  backdrop-blur-sm flex items-center gap-1',
+            'px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 disabled:opacity-50 disabled:cursor-not-allowed',
             getCurrentFilter === NewsFilter.FAKE
               ? 'bg-amber-500/80 text-white shadow-lg'
               : 'bg-gray-200/20 text-white hover:bg-gray-200/30',
           ]"
+          :disabled="keyWord.length > 0"
         >
-          <SvgIcon type="mdi" :path="mdiAlertCircle" :size="20" />
-          Fake News
+          <SvgIcon type="mdi" :path="mdiAlertCircle" :size="16" class="md:!w-5 md:!h-5" />
+          <span class="hidden sm:inline">Fake News</span>
         </button>
         <button
           @click="setFilter(NewsFilter.NOT_FAKE)"
           :class="[
-            'px-4 py-2 rounded-full font-medium  backdrop-blur-sm flex items-center gap-1',
+            'px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 disabled:opacity-50 disabled:cursor-not-allowed',
             getCurrentFilter === NewsFilter.NOT_FAKE
               ? 'bg-emerald-500/80 text-white shadow-lg'
               : 'bg-gray-200/20 text-white hover:bg-gray-200/30',
           ]"
+          :disabled="keyWord.length > 0"
         >
-          <SvgIcon type="mdi" :path="mdiCheckCircle" :size="20" />
-          Not-Fake News
+          <SvgIcon type="mdi" :path="mdiCheckCircle" :size="16" class="md:!w-5 md:!h-5" />
+          <span class="hidden sm:inline">Not-Fake News</span>
         </button>
+
+        <RouterLink
+          v-if="isLoggedIn && (isMember || isAdmin)"
+          :to="{ name: 'create-news' }"
+          class="px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+        >
+          <SvgIcon type="mdi" :path="mdiPlusBox" :size="16" class="md:!w-5 md:!h-5" />
+          <span class="hidden sm:inline">Create News</span>
+          <span class="sm:hidden">Create</span>
+        </RouterLink>
       </div>
 
       <div class="flex items-center">
@@ -116,8 +136,9 @@ onMounted(() => {
     </div>
 
     <div v-if="loadingStatus">
-      <p>Loading news...</p>
+      <SkeletonNewsList :count="currentLimit" />
     </div>
+
     <div v-else class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       <NewsCard v-for="newsItem in allNews" :key="newsItem.id" :news="newsItem" />
     </div>
@@ -126,7 +147,7 @@ onMounted(() => {
       <button
         @click="setPage(currentPage - 1)"
         :disabled="currentPage === 0"
-        class="px-8 py-3 rounded-full bg-zinc-200/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        class="px-8 py-3 rounded-full bg-zinc-200/30 shadow-xl/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <SvgIcon type="mdi" :path="mdiChevronLeft" :size="20" />
       </button>
@@ -136,7 +157,7 @@ onMounted(() => {
       <button
         @click="setPage(currentPage + 1)"
         :disabled="currentPage >= totalPages - 1"
-        class="px-8 py-3 rounded-full bg-zinc-200/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        class="px-8 py-3 rounded-full bg-zinc-200/30 shadow-xl/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <SvgIcon type="mdi" :path="mdiChevronRight" :size="20" />
       </button>

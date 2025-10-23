@@ -1,5 +1,5 @@
 import apiClient from './AxiosClient'
-import { type NewsHomepage, type Page, NewsFilter , type NewsDetail } from '@/types'
+import { type NewsHomepage, type NewsSave, type Page, NewsFilter, type NewsDetail } from '@/types'
 
 export function getNewsList(page: number, size: number, status: NewsFilter, keyword: string) {
   /* eslint-disable */
@@ -22,8 +22,11 @@ export function getNewsList(page: number, size: number, status: NewsFilter, keyw
   }
 }
 
-export function getNewsDetail(id: number) {
+export function addNews(payload: NewsSave) {
+  return apiClient.post<NewsDetail>('/news', payload)
+}
 
+export function getNewsDetail(id: number) {
   return apiClient
     .get<NewsDetail>(`/news/id/${id}`)
     .then((res) => res.data)
@@ -36,5 +39,3 @@ export function getNewsDetail(id: number) {
 export function getNewsDetailBySlug(slug: string) {
   return apiClient.get<NewsDetail>(`/news/slug/${slug}`)
 }
-
-
