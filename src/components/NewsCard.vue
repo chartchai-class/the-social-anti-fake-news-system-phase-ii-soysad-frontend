@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { NewsHomepage } from '@/types'
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   news: NewsHomepage
 }>()
 
@@ -12,9 +13,16 @@ const formatDate = (dateString: string | null | undefined) => {
   const date = new Date(dateString)
   return date.toLocaleDateString()
 }
+// ถ้าต้องการใช้ slug ให้เปลี่ยน :to เป็น { name: 'news-detail-slug', params: { slug: props.news.slug } }
+const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.news.id } }))
 </script>
 
 <template>
+  <RouterLink
+    :to="toNewsDetail"
+    class="relative block bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden hover:ring-1 hover:ring-zinc-600/40 transition"
+  >
+
   <div
     class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden"
   >
@@ -56,4 +64,5 @@ const formatDate = (dateString: string | null | undefined) => {
       </span> -->
     </div>
   </div>
+  </RouterLink>
 </template>
