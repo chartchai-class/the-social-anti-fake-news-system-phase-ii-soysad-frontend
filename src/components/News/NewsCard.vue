@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useNewsStore } from '@/stores/newStore'
 import { storeToRefs } from 'pinia'
-import { deleteNews } from '@/services/NewService'
+import { deleteNews } from '@/services/AdminService'
 
 // @ts-expect-error - SvgIcon library lacks TypeScript definitions
 import SvgIcon from '@jamescoyle/vue-icon'

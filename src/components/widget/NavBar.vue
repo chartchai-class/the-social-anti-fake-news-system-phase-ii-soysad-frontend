@@ -3,14 +3,16 @@
 import { RouterLink } from 'vue-router'
 // @ts-ignore
 import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiLogin, mdiAccountPlus, mdiLogout } from '@mdi/js'
+import { mdiLogin, mdiAccountPlus, mdiLogout, mdiCog } from '@mdi/js'
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
+import AdminLayout from '@/views/BackOffice/AdminLayout.vue'
 
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isLoggedIn)
 const currentUser = computed(() => authStore.currentUser)
+const isAdmin = computed(() => authStore.isAdmin)
 
 function logout() {
   authStore.logout()
@@ -28,6 +30,17 @@ function logout() {
         SoYSaD
       </RouterLink>
 
+      <div class="ml-auto mr-5">
+        <RouterLink :to="{ name: 'admin-layout' }">
+          <div
+            v-if="isAdmin"
+            class="text-white bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-full text-sm sm:text-base"
+          >
+            <span class="hidden sm:inline">Admin Backoffice </span>
+            <SvgIcon type="mdi" :path="mdiCog" class="inline" />
+          </div>
+        </RouterLink>
+      </div>
       <ul v-if="isLoggedIn && currentUser" class="flex items-center space-x-4">
         <img :src="currentUser.profileImageUrl" class="w-10 h-10 rounded-full object-cover" />
         <li class="nav-item px-2 text-white hidden sm:inline">

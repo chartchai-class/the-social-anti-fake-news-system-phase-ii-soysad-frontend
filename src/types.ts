@@ -92,3 +92,21 @@ export interface NewsSave {
   fullDetail: string
   mainImageUrl: string
 }
+
+//admin
+export enum Role {
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER',
+  READER = 'READER',
+}
+
+export interface User {
+  id: number
+  name: string
+  surname: string
+  username: string
+  email: string
+  profileImageUrl: string | null
+  role: Role
+  enabled: boolean
+}

@@ -4,8 +4,8 @@ import * as yup from 'yup'
 import { useForm, useField } from 'vee-validate'
 import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
-import ImageUpload from '@/components/ImageUpload.vue'
-import InputText from '@/components/InputText.vue'
+import ImageUpload from '@/components/widget/ImageUpload.vue'
+import InputText from '@/components/widget/InputText.vue'
 const authStore = useAuthStore()
 const currentStep = ref(1)
 const isSubmitting = ref(false)

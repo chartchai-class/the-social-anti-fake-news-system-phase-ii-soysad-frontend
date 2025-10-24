@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NewListView from '@/views/NewListView.vue'
+import NewListView from '@/views/NewsList/NewListView.vue'
 import { useAuthStore } from '@/stores/auth'
 import NProgress from 'nprogress'
 // import NewsDetailView from '@/views/NewsDetail/NewsDetailFrame.vue'
@@ -16,17 +16,17 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue'),
+      component: () => import('@/views/auth/LoginView.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('@/views/RegisterView.vue'),
+      component: () => import('@/views/auth/RegisterView.vue'),
     },
     {
       path: '/create-news',
       name: 'create-news',
-      component: () => import('../views/CreateNewsView.vue'),
+      component: () => import('../views/NewsList/CreateNewsView.vue'),
 
       beforeEnter: (to, from, next) => {
         const authStore = useAuthStore()
@@ -41,6 +41,33 @@ const router = createRouter({
       path: '/news/:id',
       name: 'news-detail',
       component: TestDetailView,
+    },
+
+    {
+      path: '/admin',
+      name: 'admin-layout',
+      component: () => import('@/views/BackOffice/AdminLayout.vue'),
+      children: [
+        {
+          path: '',
+          redirect: { name: 'admin-users' },
+        },
+        {
+          path: 'users',
+          name: 'admin-users',
+          component: () => import('@/views/BackOffice/MannageUserRole.vue'),
+        },
+        {
+          path: 'posts',
+          name: 'admin-posts',
+          component: () => import('@/views/BackOffice/MannageDelPosts.vue'),
+        },
+        {
+          path: 'comments',
+          name: 'admin-comments',
+          component: () => import('@/views/BackOffice/MannageDelComments.vue'),
+        },
+      ],
     },
   ],
 })

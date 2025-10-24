@@ -26,9 +26,9 @@ export function addNews(payload: NewsSave) {
   return apiClient.post<NewsDetail>('/news', payload)
 }
 
-export function deleteNews(id: number) {
-  return apiClient.delete(`/news/delete/${id}`)
-}
+// export function deleteNews(id: number) {
+//   return apiClient.delete(`/news/delete/${id}`)
+// }
 
 export function getNewsDetail(id: number) {
   return apiClient

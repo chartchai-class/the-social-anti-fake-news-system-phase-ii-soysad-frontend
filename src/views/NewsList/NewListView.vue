@@ -3,10 +3,10 @@
 import { onMounted, ref, watch } from 'vue'
 import { useNewsStore } from '@/stores/newStore'
 import { storeToRefs } from 'pinia'
-import NewsCard from '@/components/NewsCard.vue'
+import NewsCard from '@/components/News/NewsCard.vue'
 // @ts-ignore
 import SvgIcon from '@jamescoyle/vue-icon'
-import SkeletonNewsList from '@/components/SkeltonNewList.vue'
+import SkeletonNewsList from '@/components/News/SkeltonNewList.vue'
 import {
   mdiChevronLeft,
   mdiChevronRight,
@@ -120,12 +120,12 @@ onMounted(() => {
           :to="{ name: 'create-news' }"
           class="px-4 py-3 rounded-full font-medium backdrop-blur-sm flex items-center shadow-xl/30 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
         >
-          <SvgIcon type="mdi" :path="mdiPlusBox" :size="16" />
+          <SvgIcon type="mdi" :path="mdiPlusBox" :size="16" class="mr-1" />
           <span class="hidden sm:inline">Create News</span>
         </RouterLink>
 
         <label for="limit-select" class="mr-2 ml-6 text-sm text-white"> Per page : </label>
-        <select v-model="selectedLimit" class="border border-gray-300 rounded px-4 py-2 text-sm">
+        <select v-model="selectedLimit" class="border border-gray-300 rounded-xl px-4 py-2 text-sm">
           <option value="6">6</option>
           <option value="12">12</option>
           <option value="18">18</option>

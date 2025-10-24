@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       localStorage.removeItem('access_token')
       localStorage.removeItem('user')
-      router.push({ name: 'home' })
+      router.push({ name: 'login' })
     },
   },
 })
