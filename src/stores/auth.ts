@@ -1,17 +1,8 @@
 import { defineStore } from 'pinia'
-import axios, { type AxiosInstance } from 'axios'
 // import { log } from 'console'
-// import router from '@/router'
+import router from '@/router'
 import { type UserAuth } from '@/types'
-
-const apiClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
-  withCredentials: false,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-})
+import apiClient from '@/services/AxiosClient'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -59,6 +50,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       localStorage.removeItem('access_token')
       localStorage.removeItem('user')
+      router.push({ name: 'home' })
     },
   },
 })

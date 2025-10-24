@@ -50,13 +50,14 @@ function submitRegistration() {
   authStore
     .register(payload)
     .then(() => {
-      router.push({ name: 'home' })
+      console.log('Registration successful')
     })
     .catch((error) => {
       console.error('Registration failed:', error)
     })
     .finally(() => {
       isSubmitting.value = false
+      router.push({ name: 'home' })
     })
 }
 </script>

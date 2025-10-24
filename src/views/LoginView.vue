@@ -4,6 +4,7 @@ import * as yup from 'yup'
 import { useField, useForm } from 'vee-validate'
 import { useAuthStore } from '@/stores/auth'
 import router from '@/router'
+// import { onMounted } from 'vue'
 
 const authStore = useAuthStore()
 const validationSchema = yup.object({

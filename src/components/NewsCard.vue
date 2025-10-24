@@ -1,10 +1,37 @@
 <script setup lang="ts">
 import type { NewsHomepage } from '@/types'
 import { computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useNewsStore } from '@/stores/newStore'
+import { storeToRefs } from 'pinia'
+import { deleteNews } from '@/services/NewService'
+
+// @ts-expect-error - SvgIcon library lacks TypeScript definitions
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiTrashCan } from '@mdi/js'
 
 const props = defineProps<{
   news: NewsHomepage
 }>()
+
+const authStore = useAuthStore()
+const { isAdmin } = storeToRefs(authStore)
+const newsStore = useNewsStore()
+
+const handleDelete = (event: MouseEvent) => {
+  event.preventDefault()
+  event.stopPropagation()
+  if (confirm(`Are you want to delete "${props.news.topic}"?`)) {
+    deleteNews(props.news.id)
+      .then(() => {
+        return newsStore.fetchNews(newsStore.currentPage)
+      })
+      .catch((error) => {
+        console.error('Failed to delete news:', error)
+        alert('You do not have permission to delete this news.')
+      })
+  }
+}
 
 const formatDate = (dateString: string | null | undefined) => {
   if (!dateString) {
@@ -17,12 +44,9 @@ const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.
 </script>
 
 <template>
-  <RouterLink
-    :to="toNewsDetail"
-    class="relative block bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden hover:ring-1 hover:ring-zinc-600/40 transition"
-  >
+  <RouterLink :to="toNewsDetail">
     <div
-      class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-xl/40 overflow-hidden"
+      class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-xl/50 overflow-hidden hover:border-gray-500 h-full"
     >
       <img :src="news.mainImageUrl" class="w-full h-65 object-cover" v-if="news.mainImageUrl" />
 
@@ -45,7 +69,16 @@ const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.
         UNVERIFIED
       </div>
 
-      <div class="p-4">
+      <button
+        v-if="isAdmin"
+        @click.prevent.stop="handleDelete"
+        class="absolute top-4 left-4 p-2 rounded-full bg-red-700/80 text-white hover:bg-red-700 transition-colors z-10"
+        title="Delete this news"
+      >
+        <SvgIcon type="mdi" :path="mdiTrashCan" :size="18" />
+      </button>
+
+      <div class="p-6">
         <h3 class="font-bold text-lg mb-2">{{ news.topic }}</h3>
         <p class="text-gray-500 text-sm mb-4">{{ news.shortDetail }}</p>
 

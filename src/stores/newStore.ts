@@ -62,6 +62,7 @@ export const useNewsStore = defineStore('news', {
       this.searchKeyword = keyword
       this.fetchNews(0)
     },
+
     createNews(payload: NewsSave): Promise<NewsDetail> {
       return addNews(payload)
         .then((response) => {

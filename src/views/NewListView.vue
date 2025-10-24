@@ -53,7 +53,7 @@ watch(selectedLimit, (newLimit) => {
 })
 
 onMounted(() => {
-  fetchNews(0)
+  fetchNews(newsStore.currentPage)
 })
 </script>
 
@@ -77,55 +77,54 @@ onMounted(() => {
         <button
           @click="setFilter(NewsFilter.ALL)"
           :class="[
-            'px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30',
+            'px-4 py-3  rounded-full  font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30',
             getCurrentFilter === NewsFilter.ALL
               ? 'bg-white  text-black shadow-lg'
               : 'bg-gray-200/20 text-white hover:bg-gray-200/30',
           ]"
         >
-          <SvgIcon type="mdi" :path="mdiNewspaper" :size="16" class="md:!w-5 md:!h-5" />
+          <SvgIcon type="mdi" :path="mdiNewspaper" :size="16" />
           <span class="hidden sm:inline">All News</span>
         </button>
         <button
           @click="setFilter(NewsFilter.FAKE)"
           :class="[
-            'px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 disabled:opacity-50 disabled:cursor-not-allowed',
+            'px-4 py-3  rounded-full  font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 disabled:opacity-50 disabled:cursor-not-allowed',
             getCurrentFilter === NewsFilter.FAKE
               ? 'bg-amber-500/80 text-white shadow-lg'
               : 'bg-gray-200/20 text-white hover:bg-gray-200/30',
           ]"
           :disabled="keyWord.length > 0"
         >
-          <SvgIcon type="mdi" :path="mdiAlertCircle" :size="16" class="md:!w-5 md:!h-5" />
+          <SvgIcon type="mdi" :path="mdiAlertCircle" :size="16" />
           <span class="hidden sm:inline">Fake News</span>
         </button>
         <button
           @click="setFilter(NewsFilter.NOT_FAKE)"
           :class="[
-            'px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 disabled:opacity-50 disabled:cursor-not-allowed',
+            'px-4 py-3  rounded-full  font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 disabled:opacity-50 disabled:cursor-not-allowed',
             getCurrentFilter === NewsFilter.NOT_FAKE
               ? 'bg-emerald-500/80 text-white shadow-lg'
               : 'bg-gray-200/20 text-white hover:bg-gray-200/30',
           ]"
           :disabled="keyWord.length > 0"
         >
-          <SvgIcon type="mdi" :path="mdiCheckCircle" :size="16" class="md:!w-5 md:!h-5" />
+          <SvgIcon type="mdi" :path="mdiCheckCircle" :size="16" />
           <span class="hidden sm:inline">Not-Fake News</span>
         </button>
-
-        <RouterLink
-          v-if="isLoggedIn && (isMember || isAdmin)"
-          :to="{ name: 'create-news' }"
-          class="px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm flex items-center gap-1 shadow-xl/30 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
-        >
-          <SvgIcon type="mdi" :path="mdiPlusBox" :size="16" class="md:!w-5 md:!h-5" />
-          <span class="hidden sm:inline">Create News</span>
-          <span class="sm:hidden">Create</span>
-        </RouterLink>
       </div>
 
       <div class="flex items-center">
-        <label for="limit-select" class="mr-2 text-sm text-white"> Per page : </label>
+        <RouterLink
+          v-if="isLoggedIn && (isMember || isAdmin)"
+          :to="{ name: 'create-news' }"
+          class="px-4 py-3 rounded-full font-medium backdrop-blur-sm flex items-center shadow-xl/30 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+        >
+          <SvgIcon type="mdi" :path="mdiPlusBox" :size="16" />
+          <span class="hidden sm:inline">Create News</span>
+        </RouterLink>
+
+        <label for="limit-select" class="mr-2 ml-6 text-sm text-white"> Per page : </label>
         <select v-model="selectedLimit" class="border border-gray-300 rounded px-4 py-2 text-sm">
           <option value="6">6</option>
           <option value="12">12</option>
@@ -147,7 +146,7 @@ onMounted(() => {
       <button
         @click="setPage(currentPage - 1)"
         :disabled="currentPage === 0"
-        class="px-8 py-3 rounded-full bg-zinc-200/30 shadow-xl/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        class="px-8 py-3 rounded-full bg-zinc-400/30 shadow-xl/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <SvgIcon type="mdi" :path="mdiChevronLeft" :size="20" />
       </button>
@@ -157,7 +156,7 @@ onMounted(() => {
       <button
         @click="setPage(currentPage + 1)"
         :disabled="currentPage >= totalPages - 1"
-        class="px-8 py-3 rounded-full bg-zinc-200/30 shadow-xl/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        class="px-8 py-3 rounded-full bg-zinc-400/30 shadow-xl/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <SvgIcon type="mdi" :path="mdiChevronRight" :size="20" />
       </button>

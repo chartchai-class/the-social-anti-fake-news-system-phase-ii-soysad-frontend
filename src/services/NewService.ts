@@ -26,6 +26,10 @@ export function addNews(payload: NewsSave) {
   return apiClient.post<NewsDetail>('/news', payload)
 }
 
+export function deleteNews(id: number) {
+  return apiClient.delete(`/news/delete/${id}`)
+}
+
 export function getNewsDetail(id: number) {
   return apiClient
     .get<NewsDetail>(`/news/id/${id}`)
@@ -34,8 +38,4 @@ export function getNewsDetail(id: number) {
       console.error('Error fetching news detail:', err)
       throw err
     })
-}
-
-export function getNewsDetailBySlug(slug: string) {
-  return apiClient.get<NewsDetail>(`/news/slug/${slug}`)
 }

@@ -3,7 +3,7 @@
 import { RouterLink } from 'vue-router'
 // @ts-ignore
 import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiLogin, mdiAccountPlus, mdiLogout, mdiPlusBox } from '@mdi/js'
+import { mdiLogin, mdiAccountPlus, mdiLogout } from '@mdi/js'
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
@@ -14,11 +14,12 @@ const currentUser = computed(() => authStore.currentUser)
 
 function logout() {
   authStore.logout()
-  router.push({ name: 'login' })
 }
 </script>
 <template>
-  <header class="bg-zinc-900/20 backdrop-blur-sm sticky top-0 z-50">
+  <header
+    class="bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 shadow-sm sticky top-0 z-50"
+  >
     <nav class="container mx-auto flex justify-between items-center px-6 py-4">
       <RouterLink
         :to="{ name: 'home' }"
@@ -29,7 +30,7 @@ function logout() {
 
       <ul v-if="isLoggedIn && currentUser" class="flex items-center space-x-4">
         <img :src="currentUser.profileImageUrl" class="w-10 h-10 rounded-full object-cover" />
-        <li class="nav-item px-2 text-white">
+        <li class="nav-item px-2 text-white hidden sm:inline">
           Hi, {{ currentUser.name }} {{ currentUser.surname }} ({{ currentUser.roles.join(', ') }})
         </li>
         <li class="nav-item px-2">
