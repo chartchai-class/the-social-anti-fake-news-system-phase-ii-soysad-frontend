@@ -63,7 +63,8 @@ export interface Comments {
 
 export enum VoteType {
   FAKE = 'FAKE',
-  NOT_FAKE = 'NOT_FAKE',
+  NOT_FAKE = 'NOT_FAKE'
+  
 }
 
 export interface Reporter {
@@ -91,4 +92,11 @@ export interface NewsSave {
   shortDetail: string
   fullDetail: string
   mainImageUrl: string
+}
+
+export interface CommentsSave {
+  body: string,
+  voteType: VoteType,
+  attachments: string[],
+  userId : number
 }

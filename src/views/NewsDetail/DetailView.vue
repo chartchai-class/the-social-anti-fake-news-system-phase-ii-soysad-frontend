@@ -136,10 +136,6 @@ onMounted(()=>{
             :page-size="5"
             :embedded="true"
           />
-          
-
-
-        
         
       </article>
       

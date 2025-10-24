@@ -2,9 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import NewListView from '@/views/NewListView.vue'
 import { useAuthStore } from '@/stores/auth'
 import NProgress from 'nprogress'
-// import NewsDetailView from '@/views/NewsDetail/NewsDetailFrame.vue'
+import NewsDetailView from '@/views/NewsDetail/NewsDetailLayout.vue'
 import TestDetailView from '@/views/NewsDetail/DetailView.vue'
-
+import VoteView from '@/views/NewsDetail/VoteView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -37,11 +37,16 @@ const router = createRouter({
         }
       },
     },
-    {
-      path: '/news/:id',
+    {      
+      path: '/news/detail/:id',
       name: 'news-detail',
       component: TestDetailView,
     },
+    {
+      path: '/news/Vote/:id',
+      name: 'news-vote',
+      component: VoteView
+    }
   ],
 })
 NProgress.configure({ showSpinner: false })
