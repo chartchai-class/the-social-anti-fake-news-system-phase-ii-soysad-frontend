@@ -4,11 +4,16 @@ import type { Comments } from '@/types'
 import { useAuthStore } from '@/stores/auth';
 // @ts-expect-error - SvgIcon library lacks TypeScript definitions
 import SvgIcon from '@jamescoyle/vue-icon'
-import {mdiDeleteOutline} from '@mdi/js'
+import {mdiDeleteOutline,mdiRestore} from '@mdi/js'
 
-const props = defineProps<{ comment: Comments }>()
-const emit = defineEmits<{ 'delete-comment': [id: number] }>()
+const props = defineProps<{ 
+  comment: Comments 
+  mode: 'active' | 'deleted'
+}>()
+const emit = defineEmits<{ 'manage-comment': [id: number] }>()
 const authStore = useAuthStore()
+
+const isMine = computed(() => props.comment.author?.id === authStore.currentUser?.id)
 
 const formattedTime = computed(() => {
   const d = new Date(props.comment.createdAt)
@@ -46,6 +51,11 @@ const hasImages = computed(() => images.value.length > 0)
             <div class="text-[15px] md:text-base font-semibold 
              text-zinc-100">
               {{ props.comment.author.name }} {{ props.comment.author.surname }} 
+              <span
+                v-if="isMine"
+                class="ml-2 text-emerald-400 text-xs font-medium bg-emerald-900/40 px-2 py-0.5 rounded-full"
+              >You
+              </span>
             </div>
             <div v-if="formattedTime" class="text-[11px] text-zinc-400 mt-0.5">
               {{ formattedTime }}
@@ -62,16 +72,16 @@ const hasImages = computed(() => images.value.length > 0)
               class="inline-block size-1.5 rounded-full"
               :class="comment.voteType === 'NOT_FAKE' ? 'bg-emerald-400' : 'bg-amber-400'"
             />
-            {{ comment.voteType === 'NOT_FAKE' ? 'Real' : 'Fake' }}
+            {{ comment.voteType === 'NOT_FAKE' ? 'Fact' : 'Fake' }}
           </span>
           
           <span v-if="authStore.isAdmin">
             <button
-              @click="emit('delete-comment', props.comment.id)"
+              @click="emit('manage-comment', props.comment.id)"
               class="ml-2 inline-flex items-center justify-center rounded-full border border-zinc-700 text-zinc-400 hover:text-red-400 hover:border-red-400 transition-colors p-1.5"
               title="Delete"
             >
-              <SvgIcon type="mdi" :path="mdiDeleteOutline" size="14" />
+              <SvgIcon type="mdi" :path="props.mode === 'deleted' ? mdiRestore : mdiDeleteOutline  " size="14" />
             </button>
           </span>
 

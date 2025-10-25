@@ -1,7 +1,8 @@
 import { getNewsDetail } from '@/services/NewService'
-import { addNewComment as apiAddComment, removeComment as apiRemoveComment  } from '@/services/CommentService' 
+import { addNewComment as apiAddComment, removeComment as apiRemoveComment , restoreComment as apiRestoreComment, restoreComment  } from '@/services/CommentService' 
 import type { Comments, CommentsSave, NewsDetail,VoteType } from '@/types'
 import { defineStore } from 'pinia'
+import { useAuthStore } from './auth'
 
 interface Vote{
     total: number
@@ -60,11 +61,36 @@ export const useNewsDetailStore = defineStore('newsDetail',{
     loadNewsByID(id:number): Promise<void> {
         this.loading = true;
         this.error = null;
+        const auth = useAuthStore()
+
         return getNewsDetail(id)
             .then((response: NewsDetail)=>{
-                this.news = response
-                this.comments = [...(response.comments ?? [])].sort((a, b) => b.id - a.id)
-                this.recalcCounts()
+
+              const comments = [...(response.comments ?? [])]
+
+      const currentUser = auth.currentUser?.id
+      if (currentUser) {
+          comments.sort((a, b) => {
+              const aMine = a.author?.id === currentUser
+              const bMine = b.author?.id === currentUser
+              if (aMine && !bMine) return -1
+              if (!aMine && bMine) return 1
+
+              const timeA = new Date(a.createdAt).getTime()
+              const timeB = new Date(b.createdAt).getTime()
+              return timeB - timeA
+            })
+      } else {
+          comments.sort((a, b) => {
+            const timeA = new Date(a.createdAt).getTime()
+            const timeB = new Date(b.createdAt).getTime()
+            return timeB - timeA
+          })
+        }
+
+          this.news = response
+          this.comments = comments
+          this.recalcCounts()
             })
             .catch((e: any) => {
             this.error = e?.message ?? 'load failed'
@@ -90,11 +116,23 @@ export const useNewsDetailStore = defineStore('newsDetail',{
     if (!this.news?.id) return Promise.reject(new Error('no news id'))
 
     return apiRemoveComment(commentId, this.news.id)
-        .then(() => this.loadNewsByID(this.news!.id))  
-        .catch((e) => {
-            this.error = e?.message ?? 'remove comment failed'
-            return Promise.reject(e)
+            .then(() => this.loadNewsByID(this.news!.id))  
+            .catch((e) => {
+                this.error = e?.message ?? 'remove comment failed'
+                return Promise.reject(e)
         })
+    },
+
+    restoreComment(commentId: number): Promise<void> {
+        if (!this.news?.id) return Promise.reject(new Error('no news id'))
+
+        return apiRestoreComment(commentId, this.news.id)
+            .then(() => this.loadNewsByID(this.news!.id))  
+            .catch((e) => {
+                this.error = e?.message ?? 'remove comment failed'
+                return Promise.reject(e)
+        })
+ 
     }
     }
 }) 

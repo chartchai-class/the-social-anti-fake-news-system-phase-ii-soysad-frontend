@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import CommentItem from './CommentItem.vue'
 import { useNewsDetailStore } from '@/stores/newsDetailStore';
 import type { Comments } from '@/types'
+import { useAuthStore } from '@/stores/auth';
 
 
 const PER_PAGE_OPTIONS = [5, 10, 15] as const
@@ -11,6 +12,8 @@ const props = defineProps<{
   pageSize?: number
   embedded?: boolean
 }>()
+
+const auth = useAuthStore();
 
 const store = useNewsDetailStore()
 const list =  computed(() => store.comments)
@@ -42,10 +45,14 @@ const showsComments = computed(() => {
   return filtered.value.slice(start, start + selectedSize.value)
 })
 
-function onDeleteComment(id: number) {
+function onManageComment(id: number) {
   
-  store.removeComment(id)                                                   
-    .then(() => {
+  const action =
+    mode.value === 'deleted'
+      ? store.restoreComment(id)
+      : store.removeComment(id)
+                                                      
+  action.then(() => {
       
         const start = (page.value - 1) * selectedSize.value
         const totalAfter =
@@ -96,14 +103,14 @@ watch(() => store.counts.deleted.total, () => { page.value = 1 })
       </div>
 
       <label class="text-sm flex justify-between items-center gap-3 text-zinc-400">
-          <div class="flex items-center gap-2 ">
+          <div class="flex items-center gap-2 " v-if="auth.isAdmin">
             <div class="inline-flex rounded-lg border border-zinc-700 bg-zinc-900/60 p-0.5">
               <button
                 class="px-3 py-1.5 h-[29px] text-sm rounded-md transition 300 leading-none"
                 :class="mode === 'active' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'"
                 @click="changeMode('active')"
               >Active</button>
-              <button
+              <button 
                 class="px-3 py-1.5 h-[29px] text-sm rounded-md transition 300  leading-none"
                 :class="mode === 'deleted' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'"
                 @click="changeMode('deleted')"
@@ -115,7 +122,7 @@ watch(() => store.counts.deleted.total, () => { page.value = 1 })
 
         <select
           v-model.number="selectedSize"
-          class="rounded-lg border border-zinc-700 bg-zinc-900/60 text-zinc-100 px-2.5 py-1.5 h-[35px] text-sm outline-none hover:bg-zinc-800/70 focus:ring-1 focus:ring-emerald-500"
+          class="rounded-lg border border-zinc-700 bg-zinc-900/60 text-zinc-100 px-2.5 py-1.5 h-[35px] text-sm outline-none hover:bg-zinc-800/70 "
         >
           <option v-for="number in PER_PAGE_OPTIONS" :key="number" :value="number">{{ number }}</option>
         </select>
@@ -129,7 +136,7 @@ watch(() => store.counts.deleted.total, () => { page.value = 1 })
     </div>
 
     <ol v-else class="space-y-4">
-      <CommentItem v-for="c in showsComments" :key="c.id" :comment="c" @delete-comment="onDeleteComment"/>
+      <CommentItem v-for="c in showsComments" :key="c.id" :comment="c" @manage-comment="onManageComment(c.id)" :mode="mode"/>
     </ol>
 
     

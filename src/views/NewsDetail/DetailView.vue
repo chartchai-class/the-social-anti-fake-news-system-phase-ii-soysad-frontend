@@ -32,7 +32,7 @@ function formatDateTime(isoOrNull: string | null | Date): string {
         v-else-if="(NewsDetail as any).status === 'NOT_FAKE'"
         class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
       >
-        NON-FAKE
+        FACT
       </div>
       <div
         v-else
