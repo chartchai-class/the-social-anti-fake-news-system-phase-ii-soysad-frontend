@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed , watch} from 'vue'
 import { useRoute , useRouter } from 'vue-router'
-import { addNewComment } from '@/services/CommentService'
+import { useNewsDetailStore } from '@/stores/newsDetailStore'    
 import { VoteType } from '@/types' 
 import ImageUpload from '@/components/ImageUpload.vue'
 import InputText from '@/components/InputText.vue'
@@ -11,6 +11,7 @@ import { useForm, useField } from 'vee-validate'
 
 const route = useRoute()
 const router = useRouter()
+const store = useNewsDetailStore()
 const newsId = Number(route.params.id) 
 
 const isSubmitting = ref(false)
@@ -43,18 +44,23 @@ watch(latestUpload, (val) => {
 const onSubmit = handleSubmit((values) => {
     isSubmitting.value = true
 
-    const comment = {
+    const payload = {
         body: values.comment,
         voteType: values.voteType,
         attachments: imageList.value.filter(u => !u.startsWith('data:')),
-        userId : currentUser.value?.id!
+        userId: currentUser.value?.id!
         
-    }    
-    addNewComment(comment,newsId)
-    resetForm()
-    imageList.value = []
-    router.push({ name: 'news', params: { id: newsId } })
-    isSubmitting.value = false
+    } 
+
+    store.addComment(payload)
+    .then(()=>{
+      resetForm()
+      imageList.value = []
+      router.push({ name: 'news', params: { id: newsId } })
+    })
+    .finally(()=>{
+      isSubmitting.value = false
+    })
 })
 
 

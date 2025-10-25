@@ -1,16 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { getNewsDetail } from '@/services/NewService' 
-import type { NewsDetail as NewsDetailDTO } from '@/types'
 import CommentList from '@/components/Comment/CommentList.vue'
+import {computed} from 'vue'
+import { useNewsDetailStore } from '@/stores/newsDetailStore'
 
-const route = useRoute()
-const id = Number(route.params.id)
-
-const NewsDetail = ref<NewsDetailDTO | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
+const store = useNewsDetailStore()
+const NewsDetail = computed(()=> store.news)
 
 function formatDateTime(isoOrNull: string | null | Date): string {
   if (!isoOrNull) return 'Unpublished'
@@ -19,41 +13,13 @@ function formatDateTime(isoOrNull: string | null | Date): string {
   return d.toLocaleString() 
 }
 
-onMounted(()=>{
-  getNewsDetail(id)
-  .then((data)=>{
-    NewsDetail.value = data
-  })
-  .catch((err)=>{
-    error.value = err.message || 'Failed to load news detail.'
-  })
-  .finally(()=>{
-    loading.value = false
-})
-
-})
-
 </script>
 
 <template>
 
     <main class="mx-auto max-w-[1000px] px-5 sm:px-6 lg:px-10 py-6">
 
-      <div v-if="loading" class="space-y-3">
-      <div class="h-8 w-3/4 bg-zinc-800 rounded animate-pulse"></div>
-      <div class="h-64 bg-zinc-800 rounded animate-pulse"></div>
-      <div class="h-4 w-full bg-zinc-800 rounded animate-pulse"></div>
-      <div class="h-4 w-5/6 bg-zinc-800 rounded animate-pulse"></div>
-      </div>
-
-      <div
-      v-else-if="error"
-      class="rounded-3xl border border-red-800 bg-red-900/30 text-red-200 p-4"
-      >
-      {{ error }}
-      </div>
-
-      <article v-else-if="NewsDetail" 
+      <article v-if="NewsDetail" 
       class="relative bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden text-zinc-100"
       >
       <div
@@ -66,7 +32,7 @@ onMounted(()=>{
         v-else-if="(NewsDetail as any).status === 'NOT_FAKE'"
         class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
       >
-        REAL
+        NON-FAKE
       </div>
       <div
         v-else
@@ -127,15 +93,11 @@ onMounted(()=>{
     
         </section>
         
-          <CommentList
-            v-if="NewsDetail"
-            :comments="NewsDetail.comments"
-            :page-size="5"
-            :embedded="true"
-          />
+        <CommentList :page-size="5" :embedded="true" />                         
+
         
       </article>
-      
+      <div v-else class="text-zinc-400">No content.</div> 
     </main>
 
 

@@ -9,8 +9,16 @@ export function addNewComment(comment: CommentsSave,newsId: number){
 
 }
 
-export function removeComment(commentID:number){
+export function removeComment(commentID:number,newsID:number){
       console.log(commentID)
-      return apiClient.delete(`/comments/delete/${commentID}`)
+      console.log(newsID)
+      return apiClient.delete(`/comments/delete/${commentID}/${newsID}`)
+}
+
+export function restoreComment(commentID:number,newsID:number){
+      console.log(commentID)
+      console.log(newsID)
+      return apiClient.put(`/comments/restore/${commentID}/${newsID}`)
+
 }
 

@@ -1,13 +1,25 @@
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+
+import { watch, onMounted } from 'vue'
+import { useRoute, useRouter,RouterView } from 'vue-router'
+//@ts-expect-error - SvgIcon library lacks TypeScript definitions
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiNewspaperVariantOutline, mdiCommentOutline, mdiArrowLeft } from '@mdi/js'
-
+import { useNewsDetailStore } from '@/stores/newsDetailStore'
 
 const router = useRouter();
+const store = useNewsDetailStore()
 const route = useRoute();
-const newsId = computed(() => Number(route.params.id))
+
+function load() {
+  const id = Number(route.params.id)
+  if (!Number.isNaN(id)) {
+    store.loadNewsByID(id).catch(() => {})
+  }
+}
+onMounted(load)
+watch(() => route.params.id, load)
+
 
 function isActive(name: string) {
   const active =
@@ -41,7 +53,7 @@ function goBack() {
 
       <li>
         <RouterLink
-          :to="{ name: 'detail', params: { id: newsId } }"
+          :to="{ name: 'detail' }"
           class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors"
           :class="isActive('detail')"
         >
@@ -52,7 +64,7 @@ function goBack() {
 
       <li>
         <RouterLink
-          :to="{ name: 'vote', params: { id: newsId } }"
+          :to="{ name: 'vote' }"
           class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors"
           :class="isActive('vote')"
         >

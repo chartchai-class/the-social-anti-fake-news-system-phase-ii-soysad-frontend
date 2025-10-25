@@ -1,52 +1,61 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import type { Comments } from '@/types'
 import CommentItem from './CommentItem.vue'
-import {removeComment} from '@/services/CommentService'
+import { useNewsDetailStore } from '@/stores/newsDetailStore';
+import type { Comments } from '@/types'
+
 
 const PER_PAGE_OPTIONS = [5, 10, 15] as const
 
-const props = defineProps<{
-  comments: Comments[]            
+const props = defineProps<{         
   pageSize?: number
   embedded?: boolean
 }>()
 
+const store = useNewsDetailStore()
+const list =  computed(() => store.comments)
+
 const selectedSize = ref(props.pageSize ?? 5)
 const page = ref(1)
+const mode = ref<'active' | 'deleted'>('active')
 
-const list = ref<Comments[]>([])
-const total = computed(() => list.value.filter(c => !c.deleted).length)
+function changeMode(select: 'active' | 'deleted'){
+  mode.value = select
+  page.value = 1
+}
+
+const filtered = computed<Comments[]>(() => {
+  const arr = list.value ?? []
+  return mode.value === 'deleted'
+    ? arr.filter(c => c.deleted)
+    : arr.filter(c => !c.deleted)
+})
+
+const total = computed(() => filtered.value.length)
 
 const pageCount = computed(() =>
   Math.max(1, Math.ceil(total.value / selectedSize.value))
 )
 
 const showsComments = computed(() => {
-  const activeComments = list.value.filter(c => !c.deleted)
   const start = (page.value - 1) * selectedSize.value
-  return activeComments.slice(start, start + selectedSize.value)
+  return filtered.value.slice(start, start + selectedSize.value)
 })
 
-
 function onDeleteComment(id: number) {
-  const idx = list.value.findIndex(c => c.id === id)
-  if (idx === -1) return
-  const backup = { ...list.value[idx] }
-
-  list.value.splice(idx, 1)
-
-  const start = (page.value - 1) * selectedSize.value
-  if (page.value > 1 && start >= list.value.filter(c => !c.deleted).length) {
-    page.value = page.value - 1
-  }
-
-  try {
-    removeComment(id) 
-  } catch (e) {    
-    list.value.splice(idx, 0, backup)
-    console.error(e)
-  }
+  
+  store.removeComment(id)                                                   
+    .then(() => {
+      
+        const start = (page.value - 1) * selectedSize.value
+        const totalAfter =
+        mode.value === 'deleted'
+          ? store.counts.deleted.total
+          : store.counts.active.total  
+        if (page.value > 1 && start >= totalAfter) page.value = page.value - 1
+      
+    })
+    .catch((e) => console.error(e))
 }
 
 function goTo(p: number) {
@@ -69,15 +78,9 @@ const pageItems = computed(() => {
 })
 
 watch(selectedSize, () => { page.value = 1 })
-
-watch(
-  () => props.comments,
-  (val) => {
-    list.value = [...(val || [])]
-    page.value = 1
-  },
-  { immediate: true }
-)
+watch(mode, () => { page.value = 1 })
+watch(() => store.counts.active.total, () => { page.value = 1 })    
+watch(() => store.counts.deleted.total, () => { page.value = 1 })
 
 </script>
 
@@ -92,19 +95,36 @@ watch(
         </h2>
       </div>
 
-      <label class="text-sm flex items-center gap-2 text-zinc-400">
+      <label class="text-sm flex justify-between items-center gap-3 text-zinc-400">
+          <div class="flex items-center gap-2 ">
+            <div class="inline-flex rounded-lg border border-zinc-700 bg-zinc-900/60 p-0.5">
+              <button
+                class="px-3 py-1.5 h-[29px] text-sm rounded-md transition 300 leading-none"
+                :class="mode === 'active' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'"
+                @click="changeMode('active')"
+              >Active</button>
+              <button
+                class="px-3 py-1.5 h-[29px] text-sm rounded-md transition 300  leading-none"
+                :class="mode === 'deleted' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'"
+                @click="changeMode('deleted')"
+              >Deleted</button>
+            </div>
+          </div>
+        <div class="flex items-center gap-2">
         <span>Per page</span>
+
         <select
           v-model.number="selectedSize"
-          class="rounded-lg border border-zinc-700 bg-zinc-900/60 text-zinc-100 px-2.5 py-1.5 text-sm outline-none hover:bg-zinc-800/70 focus:ring-1 focus:ring-emerald-500"
+          class="rounded-lg border border-zinc-700 bg-zinc-900/60 text-zinc-100 px-2.5 py-1.5 h-[35px] text-sm outline-none hover:bg-zinc-800/70 focus:ring-1 focus:ring-emerald-500"
         >
           <option v-for="number in PER_PAGE_OPTIONS" :key="number" :value="number">{{ number }}</option>
         </select>
+        </div>
       </label>
     </div>
 
     
-    <div v-if="!props.comments || props.comments.length === 0" class="text-zinc-500">
+    <div v-if="total === 0" class="text-zinc-500">
       No comments yet.
     </div>
 

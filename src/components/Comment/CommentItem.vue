@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 import type { Comments } from '@/types'
 import { useAuthStore } from '@/stores/auth';
+// @ts-expect-error - SvgIcon library lacks TypeScript definitions
 import SvgIcon from '@jamescoyle/vue-icon'
-import { removeComment } from '@/services/CommentService'
 import {mdiDeleteOutline} from '@mdi/js'
 
 const props = defineProps<{ comment: Comments }>()
