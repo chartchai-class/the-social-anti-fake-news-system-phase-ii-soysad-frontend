@@ -83,8 +83,6 @@ onMounted(()=>{
           </h1>
 
           <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-zinc-400">
-            <!-- reporter: backend อาจเป็น string หรือ object ใน DTO ของคุณ
-                 ถ้าใน type ปัจจุบันเป็น string (reporter: string) แสดงตรง ๆ ก่อน -->
             <span class="font-medium text-zinc-200">
               Reporter:
                 {{ NewsDetail.reporter.name }} {{ NewsDetail.reporter.surname }}
@@ -96,7 +94,6 @@ onMounted(()=>{
               {{ formatDateTime(NewsDetail.publishedAt as any) }}
             </time>
 
-            <!-- show status -->
             <span class="text-zinc-400">
             F: {{ NewsDetail.fakeCount }} · NF: {{ NewsDetail.notFakeCount }}
             </span>

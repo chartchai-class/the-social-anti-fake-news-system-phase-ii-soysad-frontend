@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Comments } from '@/types'
+import { useAuthStore } from '@/stores/auth';
+import SvgIcon from '@jamescoyle/vue-icon'
+import { removeComment } from '@/services/CommentService'
+import {mdiDeleteOutline} from '@mdi/js'
 
 const props = defineProps<{ comment: Comments }>()
+const emit = defineEmits<{ 'delete-comment': [id: number] }>()
+const authStore = useAuthStore()
 
 const formattedTime = computed(() => {
   const d = new Date(props.comment.createdAt)
   return isNaN(d.getTime()) ? '' : d.toLocaleString()
 })
-
 const images = computed(() => props.comment.attachments || [])
 const hasImages = computed(() => images.value.length > 0)
+
 </script>
 
 
@@ -26,6 +32,7 @@ const hasImages = computed(() => images.value.length > 0)
           :src="props.comment.author.profileImageUrl"
           alt="User Profile"
           class="w-full h-full object-cover"
+          @error="($event.target as HTMLImageElement).style.display='none'"
         /> 
         
         <div v-else class="grid place-items-center w-full h-full text-zinc-300 font-semibold">
@@ -57,6 +64,18 @@ const hasImages = computed(() => images.value.length > 0)
             />
             {{ comment.voteType === 'NOT_FAKE' ? 'Real' : 'Fake' }}
           </span>
+          
+          <span v-if="authStore.isAdmin">
+            <button
+              @click="emit('delete-comment', props.comment.id)"
+              class="ml-2 inline-flex items-center justify-center rounded-full border border-zinc-700 text-zinc-400 hover:text-red-400 hover:border-red-400 transition-colors p-1.5"
+              title="Delete"
+            >
+              <SvgIcon type="mdi" :path="mdiDeleteOutline" size="14" />
+            </button>
+          </span>
+
+
         </div>
 
         <p class="mt-3 text-[15px] leading-relaxed text-zinc-300 whitespace-pre-line">

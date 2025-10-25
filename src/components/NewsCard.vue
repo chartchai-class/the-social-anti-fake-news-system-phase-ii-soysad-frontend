@@ -13,13 +13,12 @@ const formatDate = (dateString: string | null | undefined) => {
   const date = new Date(dateString)
   return date.toLocaleDateString()
 }
-const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.news.id } }))
+const toNewsDetail = computed(() => ({ name: 'news', params: { id: props.news.id } }))
 </script>
 
 <template>
   <RouterLink
     :to="toNewsDetail"
-    class="relative block bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden hover:ring-1 hover:ring-zinc-600/40 transition"
   >
     <div
       class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-xl/40 overflow-hidden"

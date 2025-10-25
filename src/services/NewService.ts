@@ -39,3 +39,4 @@ export function getNewsDetail(id: number) {
 export function getNewsDetailBySlug(slug: string) {
   return apiClient.get<NewsDetail>(`/news/slug/${slug}`)
 }
+

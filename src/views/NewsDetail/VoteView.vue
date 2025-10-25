@@ -49,21 +49,12 @@ const onSubmit = handleSubmit((values) => {
         attachments: imageList.value.filter(u => !u.startsWith('data:')),
         userId : currentUser.value?.id!
         
-    }
-
-    console.log(comment)
-    console.log(voteType)
-    console.log(imageList)
-    
-
+    }    
     addNewComment(comment,newsId)
     resetForm()
     imageList.value = []
-    router.push({ name: 'news-detail', params: { id: newsId } })
+    router.push({ name: 'news', params: { id: newsId } })
     isSubmitting.value = false
-    
-    
-
 })
 
 
@@ -131,10 +122,9 @@ const onSubmit = handleSubmit((values) => {
             <ImageUpload v-model="latestUpload" />
           </div>
 
-          <!-- Actions -->
           <div class="pt-2 flex items-center justify-end gap-2">
             <router-link
-              :to="{ name: 'news-detail', params: { id: newsId } }"
+              :to="{ name: 'news', params: { id: newsId } }"
               class="rounded-lg px-4 py-2 text-sm font-semibold border border-zinc-700 text-zinc-200 hover:bg-zinc-800"
             >
               Cancel

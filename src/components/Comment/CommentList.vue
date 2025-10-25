@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import type { Comments } from '@/types'
 import CommentItem from './CommentItem.vue'
+import {removeComment} from '@/services/CommentService'
 
 const PER_PAGE_OPTIONS = [5, 10, 15] as const
 
@@ -14,17 +15,39 @@ const props = defineProps<{
 const selectedSize = ref(props.pageSize ?? 5)
 const page = ref(1)
 
-const total = computed(() => props.comments?.length ?? 0)
+const list = ref<Comments[]>([])
+const total = computed(() => list.value.filter(c => !c.deleted).length)
 
-const pageCount = computed(() => {
-  if (!total.value) return 1
-  return Math.max(1, Math.ceil(total.value / selectedSize.value))
-})
+const pageCount = computed(() =>
+  Math.max(1, Math.ceil(total.value / selectedSize.value))
+)
 
 const showsComments = computed(() => {
+  const activeComments = list.value.filter(c => !c.deleted)
   const start = (page.value - 1) * selectedSize.value
-  return (props.comments || []).slice(start, start + selectedSize.value)
+  return activeComments.slice(start, start + selectedSize.value)
 })
+
+
+function onDeleteComment(id: number) {
+  const idx = list.value.findIndex(c => c.id === id)
+  if (idx === -1) return
+  const backup = { ...list.value[idx] }
+
+  list.value.splice(idx, 1)
+
+  const start = (page.value - 1) * selectedSize.value
+  if (page.value > 1 && start >= list.value.filter(c => !c.deleted).length) {
+    page.value = page.value - 1
+  }
+
+  try {
+    removeComment(id) 
+  } catch (e) {    
+    list.value.splice(idx, 0, backup)
+    console.error(e)
+  }
+}
 
 function goTo(p: number) {
   if (p < 1 || p > pageCount.value) return
@@ -32,6 +55,7 @@ function goTo(p: number) {
 }
 function prev() { goTo(page.value - 1) }
 function next() { goTo(page.value + 1) }
+
 
 const pageItems = computed(() => {
   const n = pageCount.value
@@ -46,7 +70,14 @@ const pageItems = computed(() => {
 
 watch(selectedSize, () => { page.value = 1 })
 
-watch(() => props.comments, () => { page.value = 1 })
+watch(
+  () => props.comments,
+  (val) => {
+    list.value = [...(val || [])]
+    page.value = 1
+  },
+  { immediate: true }
+)
 
 </script>
 
@@ -78,7 +109,7 @@ watch(() => props.comments, () => { page.value = 1 })
     </div>
 
     <ol v-else class="space-y-4">
-      <CommentItem v-for="c in showsComments" :key="c.id" :comment="c" />
+      <CommentItem v-for="c in showsComments" :key="c.id" :comment="c" @delete-comment="onDeleteComment"/>
     </ol>
 
     

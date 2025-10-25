@@ -58,6 +58,7 @@ export interface Comments {
   updatedAt: string
   voteType: VoteType
   attachments: string[]
+  deleted: boolean
   version: number
 }
 
