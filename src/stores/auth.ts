@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
       ? JSON.parse(localStorage.getItem('user') as string)
       : null) as UserAuth | null,
   }),
+
   getters: {
     isLoggedIn: (state) => !!state.token,
     currentUser: (state) => state.user,

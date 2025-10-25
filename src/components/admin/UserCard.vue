@@ -45,7 +45,9 @@ watch(selectedRole, (newRole, oldRole) => {
 </script>
 
 <template>
-  <div class="bg-zinc-800 p-4 rounded-lg shadow-lg flex items-center gap-4">
+  <div
+    class="p-4 rounded-lg shadow-lg flex items-center border-gray-800 gap-5 hover:border-gray-600"
+  >
     <img
       :src="
         user.profileImageUrl ||

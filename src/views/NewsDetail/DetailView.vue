@@ -36,12 +36,7 @@ onMounted(() => {
 
 <template>
   <main class="mx-auto max-w-[1000px] px-5 sm:px-6 lg:px-10 py-6">
-    <div v-if="loading" class="space-y-3">
-      <div class="h-8 w-3/4 bg-zinc-800 rounded animate-pulse"></div>
-      <div class="h-64 bg-zinc-800 rounded animate-pulse"></div>
-      <div class="h-4 w-full bg-zinc-800 rounded animate-pulse"></div>
-      <div class="h-4 w-5/6 bg-zinc-800 rounded animate-pulse"></div>
-    </div>
+    <div v-if="loading" class="space-y-3">isLoading...</div>
 
     <div v-else-if="error" class="rounded-3xl border border-red-800 bg-red-900/30 text-red-200 p-4">
       {{ error }}

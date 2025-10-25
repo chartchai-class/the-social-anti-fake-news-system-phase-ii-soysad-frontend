@@ -8,7 +8,7 @@ import { deleteNews } from '@/services/AdminService'
 
 // @ts-expect-error - SvgIcon library lacks TypeScript definitions
 import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiTrashCan } from '@mdi/js'
+import { mdiTrashCanOutline } from '@mdi/js'
 
 const props = defineProps<{
   news: NewsHomepage
@@ -46,7 +46,7 @@ const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.
 <template>
   <RouterLink :to="toNewsDetail">
     <div
-      class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-xl/50 overflow-hidden hover:border-gray-500 h-full"
+      class="bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-xl/50 overflow-hidden hover:border-gray-600 h-full"
     >
       <img :src="news.mainImageUrl" class="w-full h-65 object-cover" v-if="news.mainImageUrl" />
 
@@ -60,7 +60,7 @@ const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.
         v-else-if="news.status === 'NOT_FAKE'"
         class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
       >
-        NON-FAKE
+        FACT
       </div>
       <div
         v-else-if="news.status === 'UNVERIFIED'"
@@ -72,10 +72,9 @@ const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.
       <button
         v-if="isAdmin"
         @click.prevent.stop="handleDelete"
-        class="absolute top-4 left-4 p-2 rounded-full bg-red-700/80 text-white hover:bg-red-700 transition-colors z-10"
-        title="Delete this news"
+        class="absolute top-13 right-5 p-2 rounded-full bg-red-700/80 text-white hover:bg-red-700 transition-colors z-10"
       >
-        <SvgIcon type="mdi" :path="mdiTrashCan" :size="18" />
+        <SvgIcon type="mdi" :path="mdiTrashCanOutline" :size="18" />
       </button>
 
       <div class="p-6">

@@ -10,8 +10,9 @@ import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 const newsStore = useNewsStore()
-const isSubmitting = ref(false)
-const imageUrl = ref<string>('')
+const imageUrl = ref<string>(
+  'http://velocityacademy.org/wp-content/uploads/2016/03/placeholder.jpg',
+)
 const currentUser = computed(() => authStore.currentUser)
 
 const schema = yup.object({
@@ -29,8 +30,6 @@ const { value: shortDetail } = useField<string>('shortDetail')
 const { value: fullDetail } = useField<string>('fullDetail')
 
 const onSubmit = handleSubmit((values) => {
-  isSubmitting.value = true
-
   const payload = {
     topic: values.topic,
     shortDetail: values.shortDetail,
@@ -44,17 +43,10 @@ const onSubmit = handleSubmit((values) => {
   newsStore
     .createNews(payload)
     .then((createdNews) => {
-      if (createdNews?.slug) {
-        router.push({ name: 'news-detail', params: { slug: createdNews.slug } })
-      } else {
-        router.push({ name: 'home' })
-      }
+      router.push({ name: 'news-detail', params: { id: createdNews.id } })
     })
     .catch((error) => {
       alert('Failed to create news: ' + error.message)
-    })
-    .finally(() => {
-      isSubmitting.value = false
     })
 })
 </script>
@@ -96,12 +88,12 @@ const onSubmit = handleSubmit((values) => {
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-300 mb-2">Main Image (Optional)</label>
-          <div class="flex flex-col items-center gap-4">
+          <label class="block text-sm font-medium text-gray-300 mb-4">Main Image </label>
+          <div class="flex flex-col items-center gap-5">
             <img
               v-if="imageUrl"
               :src="imageUrl"
-              class="w-full max-w-sm h-48 object-cover rounded-lg border border-zinc-700"
+              class="w-full max-w-sm h-55 object-cover rounded-lg border border-zinc-700"
             />
             <ImageUpload v-model="imageUrl" />
           </div>
@@ -109,10 +101,9 @@ const onSubmit = handleSubmit((values) => {
 
         <button
           type="submit"
-          :disabled="isSubmitting"
           class="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold disabled:opacity-50"
         >
-          {{ isSubmitting ? 'Creating...' : 'Create News' }}
+          Create News
         </button>
       </form>
     </div>

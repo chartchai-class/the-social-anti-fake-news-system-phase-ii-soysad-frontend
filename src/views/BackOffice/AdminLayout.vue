@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import router from '@/router'
+
+onMounted(() => {
+  router.push({ name: 'admin-users' })
+})
+</script>
 
 <template>
   <div
@@ -13,19 +20,19 @@
         :to="{ name: 'admin-users' }"
         class="bg-zinc-700/50 px-4 sm:px-5 py-2 sm:py-3 rounded-full text-center text-sm sm:text-base"
       >
-        Manage Users Role</RouterLink
-      >
+        Manage Users Role
+      </RouterLink>
       <RouterLink
         :to="{ name: 'admin-posts' }"
         class="bg-zinc-700/50 px-4 sm:px-5 py-2 sm:py-3 rounded-full text-center text-sm sm:text-base"
       >
-        Manage Delete Posts
+        Manage Deleted News
       </RouterLink>
       <RouterLink
         :to="{ name: 'admin-comments' }"
         class="bg-zinc-700/50 px-4 sm:px-5 py-2 sm:py-3 rounded-full text-center text-sm sm:text-base"
       >
-        Manage Delete Comments
+        Manage Deleted Comments
       </RouterLink>
     </div>
 

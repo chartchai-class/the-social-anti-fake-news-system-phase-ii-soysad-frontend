@@ -11,9 +11,10 @@ import {
   mdiChevronLeft,
   mdiChevronRight,
   mdiNewspaper,
-  mdiAlertCircle,
   mdiCheckCircle,
   mdiPlusBox,
+  mdiCancel,
+  mdiMinusCircle,
 } from '@mdi/js'
 import { NewsFilter } from '@/types'
 
@@ -32,13 +33,8 @@ const keyWord = ref('')
 const searchTimer = ref<number | null>(null)
 
 watch(keyWord, (newKeyword) => {
-  if (searchTimer.value) {
-    clearTimeout(searchTimer.value)
-    // setFilter(NewsFilter.ALL)
-  }
-  searchTimer.value = window.setTimeout(() => {
-    setSearch(newKeyword)
-  }, 500)
+  if (searchTimer.value) clearTimeout(searchTimer.value)
+  searchTimer.value = window.setTimeout(() => setSearch(newKeyword), 500)
 })
 
 watch(keyWord, () => {
@@ -72,8 +68,8 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="flex flex-row flex-wrap justify-between items-center gap-4 mb-6">
-      <div class="flex gap-2 justify-center md:justify-start flex-wrap">
+    <div class="flex flex-row justify-between items-center gap-4 mb-6">
+      <div class="flex gap-2 justify-center md:justify-start">
         <button
           @click="setFilter(NewsFilter.ALL)"
           :class="[
@@ -83,7 +79,7 @@ onMounted(() => {
               : 'bg-gray-200/20 text-white hover:bg-gray-200/30',
           ]"
         >
-          <SvgIcon type="mdi" :path="mdiNewspaper" :size="16" />
+          <SvgIcon type="mdi" :path="mdiNewspaper" :size="23" />
           <span class="hidden sm:inline">All News</span>
         </button>
         <button
@@ -96,7 +92,7 @@ onMounted(() => {
           ]"
           :disabled="keyWord.length > 0"
         >
-          <SvgIcon type="mdi" :path="mdiAlertCircle" :size="16" />
+          <SvgIcon type="mdi" :path="mdiMinusCircle" :size="23" />
           <span class="hidden sm:inline">Fake News</span>
         </button>
         <button
@@ -109,7 +105,7 @@ onMounted(() => {
           ]"
           :disabled="keyWord.length > 0"
         >
-          <SvgIcon type="mdi" :path="mdiCheckCircle" :size="16" />
+          <SvgIcon type="mdi" :path="mdiCheckCircle" :size="23" />
           <span class="hidden sm:inline">Not-Fake News</span>
         </button>
       </div>
@@ -118,13 +114,13 @@ onMounted(() => {
         <RouterLink
           v-if="isLoggedIn && (isMember || isAdmin)"
           :to="{ name: 'create-news' }"
-          class="px-4 py-3 rounded-full font-medium backdrop-blur-sm flex items-center shadow-xl/30 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+          class="px-4 py-3 rounded-full font-medium backdrop-blur-sm flex items-center shadow-xl/30 bg-indigo-600 text-white hover:bg-indigo-700"
         >
-          <SvgIcon type="mdi" :path="mdiPlusBox" :size="16" class="mr-1" />
+          <SvgIcon type="mdi" :path="mdiPlusBox" :size="23" class="mr-1" />
           <span class="hidden sm:inline">Create News</span>
         </RouterLink>
 
-        <label for="limit-select" class="mr-2 ml-6 text-sm text-white"> Per page : </label>
+        <label for="limit-select" class="mr-2 ml-6 text-sm text-white"> Per page:</label>
         <select v-model="selectedLimit" class="border border-gray-300 rounded-xl px-4 py-2 text-sm">
           <option value="6">6</option>
           <option value="12">12</option>

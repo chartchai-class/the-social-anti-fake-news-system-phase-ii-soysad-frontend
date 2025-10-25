@@ -34,9 +34,9 @@ function logout() {
         <RouterLink :to="{ name: 'admin-layout' }">
           <div
             v-if="isAdmin"
-            class="text-white bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-full text-sm sm:text-base"
+            class="text-white bg-orange-600 hover:bg-orange-500 px-3 py-2 rounded-full text-sm sm:text-base"
           >
-            <span class="hidden sm:inline">Admin Backoffice </span>
+            <span class="hidden sm:inline">Admin </span>
             <SvgIcon type="mdi" :path="mdiCog" class="inline" />
           </div>
         </RouterLink>

@@ -23,7 +23,6 @@ export enum NewsFilter {
 
 export interface NewsHomepage {
   id: number
-  slug: string
   topic: string
   shortDetail: string
   mainImageUrl: string
@@ -36,7 +35,6 @@ export interface NewsHomepage {
 
 export interface NewsDetail {
   id: number
-  slug: string
   topic: string
   shortDetail: string
   fullDetail: string

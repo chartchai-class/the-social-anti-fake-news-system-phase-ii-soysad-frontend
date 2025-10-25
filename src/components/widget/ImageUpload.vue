@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const uploadUrl = `${import.meta.env.VITE_BACKEND_URL}/uploadFile`
+
 const emit = defineEmits<{
   (e: 'update:modelValue', v: string): void
 }>()
