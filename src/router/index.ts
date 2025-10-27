@@ -62,11 +62,6 @@ const router = createRouter({
           name: 'admin-posts',
           component: () => import('@/views/BackOffice/MannageDelNews.vue'),
         },
-        {
-          path: 'comments',
-          name: 'admin-comments',
-          component: () => import('@/views/BackOffice/MannageDelComments.vue'),
-        },
       ],
     },
   ],
