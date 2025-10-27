@@ -1,5 +1,5 @@
 import { getNewsDetail } from '@/services/NewService'
-import { addNewComment as apiAddComment, removeComment as apiRemoveComment , restoreComment as apiRestoreComment, restoreComment  } from '@/services/CommentService' 
+import { addNewComment as apiAddComment, removeComment as apiRemoveComment , restoreComment as apiRestoreComment  } from '@/services/CommentService' 
 import type { Comments, CommentsSave, NewsDetail,VoteType } from '@/types'
 import { defineStore } from 'pinia'
 import { useAuthStore } from './auth'
@@ -19,6 +19,7 @@ export interface NewsDetailState {
     active: Vote
     deleted: Vote
   }
+  checkUserAlreadyComment: boolean
 }
 
 function isFake(v?: VoteType) {
@@ -34,12 +35,27 @@ export const useNewsDetailStore = defineStore('newsDetail',{
         counts: {
         active: { total: 0, fake: 0, nonFake: 0 },
         deleted: { total: 0, fake: 0, nonFake: 0 }
-        }
+        },
+        checkUserAlreadyComment: false
     }),
 
     getters: {
         activeComments: (s): Comments[] => s.comments.filter(c => !c.deleted),
-        deletedComments: (s): Comments[] => s.comments.filter(c => c.deleted)
+        deletedComments: (s): Comments[] => s.comments.filter(c => c.deleted),
+
+        isAlreadyCommented(): boolean {
+        const auth = useAuthStore()
+        const currentUserId = auth.currentUser?.id
+
+        if(!currentUserId) return false
+        return this.comments.some(c => !c.deleted && c.author?.id === currentUserId)
+        },
+
+        canGoVote(): boolean{
+          const auth = useAuthStore()
+          return !this.isAlreadyCommented && auth.isLoggedIn
+        }
+  
     },
 
     actions: {
@@ -133,6 +149,8 @@ export const useNewsDetailStore = defineStore('newsDetail',{
                 return Promise.reject(e)
         })
  
-    }
-    }
-}) 
+    },
+
+    
+  }
+})

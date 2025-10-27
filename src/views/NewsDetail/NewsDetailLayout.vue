@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { watch, onMounted } from 'vue'
+import { watch, onMounted,computed } from 'vue'
 import { useRoute, useRouter,RouterView } from 'vue-router'
 //@ts-expect-error - SvgIcon library lacks TypeScript definitions
 import SvgIcon from '@jamescoyle/vue-icon'
@@ -10,6 +10,7 @@ import { useNewsDetailStore } from '@/stores/newsDetailStore'
 const router = useRouter();
 const store = useNewsDetailStore()
 const route = useRoute();
+const canGoVote = computed(()=> store.canGoVote && !store.loading)
 
 function load() {
   const id = Number(route.params.id)
@@ -17,6 +18,7 @@ function load() {
     store.loadNewsByID(id).catch(() => {})
   }
 }
+
 onMounted(load)
 watch(() => route.params.id, load)
 
@@ -28,6 +30,7 @@ function isActive(name: string) {
     ? 'bg-white text-zinc-900 font-semibold'
     : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-400/70'
 }
+
 
 function goBack() {
   router.push({ name: 'home' })
@@ -64,6 +67,7 @@ function goBack() {
 
       <li>
         <RouterLink
+        v-if="canGoVote"
           :to="{ name: 'vote' }"
           class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors"
           :class="isActive('vote')"
@@ -71,6 +75,16 @@ function goBack() {
           <SvgIcon type="mdi" :path="mdiCommentOutline" size="18" />
           <span>Comment &amp; Vote</span>
         </RouterLink>
+
+        <button
+        v-else
+        disabled
+        class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm opacity-50 cursor-not-allowed border border-zinc-500/30 text-zinc-400"
+        title="You haven't logged in yet or you've already commented."
+        >
+          <SvgIcon type="mdi" :path="mdiCommentOutline" size="18" />
+          <span>Comment &amp; Vote</span>
+        </button>
       </li>
     </ul>
   </div>

@@ -47,6 +47,7 @@ function submitRegistration() {
     profileImageUrl: profileImageUrl.value,
   }
 
+
   authStore
     .register(payload)
     .then(() => {
@@ -59,6 +60,9 @@ function submitRegistration() {
       isSubmitting.value = false
     })
 }
+
+const isUploadingLoading = ref(false)
+
 </script>
 
 <template>
@@ -136,7 +140,7 @@ function submitRegistration() {
             <img :src="profileImageUrl" class="w-full h-full object-cover" />
           </div>
 
-          <ImageUpload v-model="profileImageUrl" />
+          <ImageUpload v-model="profileImageUrl" v-model:uploading="isUploadingLoading" />
 
           <div class="w-full flex gap-4 justify-between">
             <button
@@ -147,9 +151,11 @@ function submitRegistration() {
               Back
             </button>
             <button
+            
               @click="submitRegistration"
-              :disabled="isSubmitting"
+              :disabled="isSubmitting || isUploadingLoading"
               class="flex-1 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold disabled:opacity-50"
+              
             >
               Confirm
             </button>
