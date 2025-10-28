@@ -1,51 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { getNewsDetail } from '@/services/NewService'
-import type { NewsDetail as NewsDetailDTO } from '@/types'
 import CommentList from '@/components/Comment/CommentList.vue'
+import {computed} from 'vue'
+import { useNewsDetailStore } from '@/stores/newsDetailStore'
 
-const route = useRoute()
-const id = Number(route.params.id)
-
-const NewsDetail = ref<NewsDetailDTO | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
+const store = useNewsDetailStore()
+const NewsDetail = computed(()=> store.news)
 
 function formatDateTime(isoOrNull: string | null | Date): string {
   if (!isoOrNull) return 'Unpublished'
-  // eslint-disable-next-line
   const d = new Date(isoOrNull as any)
   if (isNaN(d.getTime())) return 'Unpublished'
-  return d.toLocaleString()
+  return d.toLocaleString() 
 }
 
-onMounted(() => {
-  getNewsDetail(id)
-    .then((data) => {
-      NewsDetail.value = data
-    })
-    .catch((err) => {
-      error.value = err.message || 'Failed to load news detail.'
-    })
-    .finally(() => {
-      loading.value = false
-    })
-})
 </script>
 
 <template>
-  <main class="mx-auto max-w-[1000px] px-5 sm:px-6 lg:px-10 py-6">
-    <div v-if="loading" class="space-y-3">isLoading...</div>
 
-    <div v-else-if="error" class="rounded-3xl border border-red-800 bg-red-900/30 text-red-200 p-4">
-      {{ error }}
-    </div>
+    <main class="mx-auto max-w-[1000px] px-5 sm:px-6 lg:px-10 py-6">
 
-    <article
-      v-else-if="NewsDetail"
+      <article v-if="NewsDetail" 
       class="relative bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden text-zinc-100"
-    >
+      >
       <div
         v-if="(NewsDetail as any).status === 'FAKE'"
         class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-amber-600"
@@ -56,7 +32,7 @@ onMounted(() => {
         v-else-if="(NewsDetail as any).status === 'NOT_FAKE'"
         class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
       >
-        REAL
+        FACT
       </div>
       <div
         v-else
@@ -65,8 +41,9 @@ onMounted(() => {
         UNVERIFIED
       </div>
 
-      <section class="px-6 lg:px-8 pt-8 pb-6">
+        <section class="px-6 lg:px-8 pt-8 pb-6">
         <header>
+          
           <h1 class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-100">
             {{ NewsDetail.topic }}
           </h1>
@@ -74,7 +51,7 @@ onMounted(() => {
           <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-zinc-400">
             <span class="font-medium text-zinc-200">
               Reporter:
-              {{ NewsDetail.reporter.name }} {{ NewsDetail.reporter.surname }}
+                {{ NewsDetail.reporter.name }} {{ NewsDetail.reporter.surname }}
             </span>
 
             <span aria-hidden="true">•</span>
@@ -83,10 +60,10 @@ onMounted(() => {
               {{ formatDateTime(NewsDetail.publishedAt as any) }}
             </time>
 
-            <!-- show status -->
             <span class="text-zinc-400">
-              F: {{ NewsDetail.fakeCount }} · NF: {{ NewsDetail.notFakeCount }}
+            F: {{ NewsDetail.fakeCount }} · NF: {{ NewsDetail.notFakeCount }}
             </span>
+
           </div>
         </header>
         <figure v-if="NewsDetail.mainImageUrl" class="mt-6">
@@ -99,9 +76,9 @@ onMounted(() => {
             />
           </div>
         </figure>
-      </section>
+        </section>
 
-      <section class="px-6 lg:px-8 pb-8">
+        <section class="px-6 lg:px-8 pb-8">
         <div class="x-auto max-w-4xl xl:max-w-5xl">
           <p class="text-lg md:text-xl text-zinc-100 font-semibold leading-relaxed">
             {{ NewsDetail.shortDetail }}
@@ -110,16 +87,18 @@ onMounted(() => {
           <div
             class="mt-6 text-base md:text-lg text-zinc-200 font-normal leading-relaxed whitespace-pre-line"
             v-text="NewsDetail.fullDetail"
-          />
-        </div>
-      </section>
+          />   
+        </div>    
 
-      <CommentList
-        v-if="NewsDetail"
-        :comments="NewsDetail.comments"
-        :page-size="5"
-        :embedded="true"
-      />
-    </article>
-  </main>
+    
+        </section>
+        
+        <CommentList :page-size="5" :embedded="true" />                         
+
+        
+      </article>
+      <div v-else class="text-zinc-400">No content.</div> 
+    </main>
+
+
 </template>

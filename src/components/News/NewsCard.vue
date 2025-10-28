@@ -40,7 +40,7 @@ const formatDate = (dateString: string | null | undefined) => {
   const date = new Date(dateString)
   return date.toLocaleDateString()
 }
-const toNewsDetail = computed(() => ({ name: 'news-detail', params: { id: props.news.id } }))
+const toNewsDetail = computed(() => ({ name: 'news', params: { id: props.news.id } }))
 </script>
 
 <template>

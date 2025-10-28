@@ -56,6 +56,7 @@ export interface Comments {
   updatedAt: string
   voteType: VoteType
   attachments: string[]
+  deleted: boolean
   version: number
 }
 
@@ -107,4 +108,11 @@ export interface User {
   profileImageUrl: string | null
   role: Role
   enabled: boolean
+}
+
+export interface CommentsSave {
+  body: string
+  voteType: VoteType
+  attachments: string[]
+  userId: number
 }

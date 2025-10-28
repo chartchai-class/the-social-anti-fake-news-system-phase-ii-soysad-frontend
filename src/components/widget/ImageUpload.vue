@@ -4,7 +4,9 @@ const uploadUrl = `${import.meta.env.VITE_BACKEND_URL}/uploadFile`
 
 const emit = defineEmits<{
   (e: 'update:modelValue', v: string): void
+  (e: 'update:uploading', v: boolean): void
 }>()
+
 
 const isUploading = ref(false)
 
@@ -44,6 +46,7 @@ const handleFileSelect = (event: Event) => {
   if (!file) return
 
   isUploading.value = true
+  emit('update:uploading', true)
 
   const reader = new FileReader()
   reader.onload = (e) => {
@@ -63,6 +66,7 @@ const handleFileSelect = (event: Event) => {
     })
     .finally(() => {
       isUploading.value = false
+      emit('update:uploading', false)
     })
 }
 </script>
@@ -82,6 +86,7 @@ const handleFileSelect = (event: Event) => {
       for="file-input"
       class="flex items-center justify-center w-48 px-6 py-4 border-2 border-dashed border-indigo-500 rounded-lg cursor-pointer hover:bg-indigo-500/10 transition-colors"
       :class="{ 'opacity-50 cursor-not-allowed': isUploading }"
+      
     >
       <div class="text-center">
         <div class="text-sm text-gray-300">

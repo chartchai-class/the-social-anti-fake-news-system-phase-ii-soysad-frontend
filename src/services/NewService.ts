@@ -39,3 +39,7 @@ export function getNewsDetail(id: number) {
       throw err
     })
 }
+
+// export function getNewsDetailBySlug(slug: string) {
+//   return apiClient.get<NewsDetail>(`/news/slug/${slug}`)
+// }
