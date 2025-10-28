@@ -106,6 +106,9 @@ const onSubmit = handleSubmit((values) => {
                 Fake
               </button>
             </div>
+            <p v-if="errors.voteType" class="text-red-500 text-xs mt-1">
+              {{ errors.voteType }}
+            </p>
           </div>
 
           <div>
