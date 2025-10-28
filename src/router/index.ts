@@ -61,6 +61,7 @@ const router = createRouter({
     },
     {
       path: '/news/:id',
+      name: 'news',
       component: NewsView,
       redirect: (to) => ({ name: 'detail', params: to.params }),
       children: [

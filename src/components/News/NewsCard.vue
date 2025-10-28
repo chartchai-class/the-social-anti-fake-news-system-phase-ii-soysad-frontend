@@ -60,7 +60,7 @@ const toNewsDetail = computed(() => ({ name: 'detail', params: { id: props.news.
         v-else-if="news.status === 'NOT_FAKE'"
         class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
       >
-        FACT
+        REAL
       </div>
       <div
         v-else-if="news.status === 'UNVERIFIED'"

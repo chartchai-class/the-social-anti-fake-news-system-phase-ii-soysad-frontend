@@ -2,6 +2,9 @@
 import CommentList from '@/components/Comment/CommentList.vue'
 import { computed } from 'vue'
 import { useNewsDetailStore } from '@/stores/newsDetailStore'
+//@ts-expect-error - SvgIcon library lacks TypeScript definitions
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiAlert, mdiCheckCircle } from '@mdi/js'
 
 const store = useNewsDetailStore()
 const NewsDetail = computed(() => store.news)
@@ -22,29 +25,29 @@ function formatDateTime(isoOrNull: string | null | Date): string {
       v-if="NewsDetail"
       class="relative bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-3xl shadow-md overflow-hidden text-zinc-100"
     >
-      <div
-        v-if="(NewsDetail as any).status === 'FAKE'"
-        class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-amber-600"
-      >
-        FAKE
-      </div>
-      <div
-        v-else-if="(NewsDetail as any).status === 'NOT_FAKE'"
-        class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-emerald-500"
-      >
-        FACT
-      </div>
-      <div
-        v-else
-        class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold text-white bg-gray-500"
-      >
-        UNVERIFIED
-      </div>
-
       <section class="px-6 lg:px-8 pt-8 pb-6">
         <header>
           <h1 class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-100">
-            {{ NewsDetail.topic }}
+            <div class="flex items-center gap-3">
+              <span class="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-100">
+                {{ NewsDetail.topic }}
+              </span>
+              <span
+                v-if="(NewsDetail as any).status === 'FAKE'"
+                class="px-5 py-2 rounded-full text-lg font-bold text-white bg-amber-600"
+              >
+                FAKE
+              </span>
+              <span
+                v-else-if="(NewsDetail as any).status === 'NOT_FAKE'"
+                class="px-5 py-2 rounded-full text-lg font-bold text-white bg-emerald-500"
+              >
+                REAL
+              </span>
+              <span v-else class="px-5 py-2 rounded-full text-lg font-bold text-white bg-gray-500">
+                UNVERIFIED
+              </span>
+            </div>
           </h1>
 
           <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-zinc-400">
@@ -58,17 +61,12 @@ function formatDateTime(isoOrNull: string | null | Date): string {
             <time :datetime="String(NewsDetail.publishedAt)">
               {{ formatDateTime(NewsDetail.publishedAt as any) }}
             </time>
-
-            <span class="text-zinc-400">
-              F: {{ NewsDetail.fakeCount }} · NF: {{ NewsDetail.notFakeCount }}
-            </span>
           </div>
         </header>
         <figure v-if="NewsDetail.mainImageUrl" class="mt-6">
           <div class="rounded-lg border border-zinc-200 overflow-hidden">
             <img
               :src="NewsDetail.mainImageUrl"
-              alt="cover"
               class="w-full h-auto object-cover"
               @error="($event.target as HTMLImageElement).src = '/img/placeholder.jpg'"
             />
@@ -86,6 +84,21 @@ function formatDateTime(isoOrNull: string | null | Date): string {
             class="mt-6 text-base md:text-lg text-zinc-200 font-normal leading-relaxed whitespace-pre-line"
             v-text="NewsDetail.fullDetail"
           />
+        </div>
+
+        <div class="flex items-center justify-center gap-2 mt-10">
+          <div
+            class="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 border border-amber-600"
+          >
+            <SvgIcon type="mdi" :path="mdiAlert" size="18" />
+            <span class="text-white font-semibold">Fake: {{ NewsDetail.fakeCount }}</span>
+          </div>
+          <div
+            class="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 border border-emerald-500"
+          >
+            <SvgIcon type="mdi" :path="mdiCheckCircle" size="18" />
+            <span class="text-white">Not Fake: {{ NewsDetail.notFakeCount }}</span>
+          </div>
         </div>
       </section>
 

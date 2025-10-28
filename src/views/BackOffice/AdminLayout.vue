@@ -28,12 +28,6 @@ onMounted(() => {
       >
         Manage Deleted News
       </RouterLink>
-      <RouterLink
-        :to="{ name: 'admin-comments' }"
-        class="bg-zinc-700/50 px-4 sm:px-5 py-2 sm:py-3 rounded-full text-center text-sm sm:text-base"
-      >
-        Manage Deleted Comments
-      </RouterLink>
     </div>
 
     <main class="bg-zinc-800/50 p-4 sm:p-6 rounded-3xl">

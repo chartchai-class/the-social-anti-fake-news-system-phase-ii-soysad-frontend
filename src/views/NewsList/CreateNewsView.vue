@@ -10,9 +10,7 @@ import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 const newsStore = useNewsStore()
-const imageUrl = ref<string>(
-  'http://velocityacademy.org/wp-content/uploads/2016/03/placeholder.jpg',
-)
+const imageUrl = ref()
 const currentUser = computed(() => authStore.currentUser)
 
 const schema = yup.object({
@@ -43,6 +41,7 @@ const onSubmit = handleSubmit((values) => {
   newsStore
     .createNews(payload)
     .then((createdNews) => {
+      alert('News created successfully!')
       router.push({ name: 'news-detail', params: { id: createdNews.id } })
     })
     .catch((error) => {
@@ -90,11 +89,6 @@ const onSubmit = handleSubmit((values) => {
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-4">Main Image </label>
           <div class="flex flex-col items-center gap-5">
-            <img
-              v-if="imageUrl"
-              :src="imageUrl"
-              class="w-full max-w-sm h-55 object-cover rounded-lg border border-zinc-700"
-            />
             <ImageUpload v-model="imageUrl" />
           </div>
         </div>

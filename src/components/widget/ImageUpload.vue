@@ -1,98 +1,46 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-const uploadUrl = `${import.meta.env.VITE_BACKEND_URL}/uploadFile`
+import Uploader from 'vue-media-upload'
+import { ref, computed } from 'vue'
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', v: string): void
-  (e: 'update:uploading', v: boolean): void
+const props = defineProps<{
+  modelValue: string | string[]
+  max?: number
 }>()
 
+const emit = defineEmits<{
+  (e: 'update:modelValue', v: string | string[]): void
+}>()
 
-const isUploading = ref(false)
+const uploadUrl = ref(import.meta.env.VITE_BACKEND_URL + '/uploadFile')
 
-const uploadImage = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const formData = new FormData()
-    formData.append('image', file)
-
-    fetch(uploadUrl, {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`)
-        }
-        return response.text()
-      })
-      .then((imageUrl) => {
-        const cleanedUrl = imageUrl.trim().replace(/\s+/g, '')
-        if (cleanedUrl.startsWith('http')) {
-          resolve(cleanedUrl)
-        } else {
-          reject(new Error('Invalid URL returned'))
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
-  })
-}
-
-const handleFileSelect = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
-
-  if (!file) return
-
-  isUploading.value = true
-  emit('update:uploading', true)
-
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    const tempPreviewUrl = e.target?.result as string
-
-    emit('update:modelValue', tempPreviewUrl)
+/* eslint-disable */
+const onChanged = (media: any[]) => {
+  if (Array.isArray(props.modelValue)) {
+    const newUrls = media.map((item) => item.name)
+    emit('update:modelValue', newUrls)
+  } else {
+    const newUrl = media.length > 0 ? media[0].name : ''
+    emit('update:modelValue', newUrl)
   }
-  reader.readAsDataURL(file)
-
-  uploadImage(file)
-    .then((finalUrl) => {
-      emit('update:modelValue', finalUrl)
-      input.value = ''
-    })
-    .catch((error) => {
-      console.error('Upload failed:', error)
-    })
-    .finally(() => {
-      isUploading.value = false
-      emit('update:uploading', false)
-    })
 }
+/* eslint-enable */
+
+const initialMedia = computed(() => {
+  const defaultImage = 'https://i.pinimg.com/236x/55/9b/b4/559bb468d3aaa734c6302dd286d27d69.jpg'
+
+  if (Array.isArray(props.modelValue)) {
+    if (props.modelValue.length > 0) {
+      return props.modelValue.map((url) => ({ name: url, source: url }))
+    }
+  } else if (typeof props.modelValue === 'string') {
+    if (props.modelValue && props.modelValue !== defaultImage) {
+      return [{ name: props.modelValue, source: props.modelValue }]
+    }
+  }
+  return []
+})
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center gap-4">
-    <input
-      id="file-input"
-      type="file"
-      accept="image/*"
-      @change="handleFileSelect"
-      :disabled="isUploading"
-      class="hidden"
-    />
-
-    <label
-      for="file-input"
-      class="flex items-center justify-center w-48 px-6 py-4 border-2 border-dashed border-indigo-500 rounded-lg cursor-pointer hover:bg-indigo-500/10 transition-colors"
-      :class="{ 'opacity-50 cursor-not-allowed': isUploading }"
-      
-    >
-      <div class="text-center">
-        <div class="text-sm text-gray-300">
-          {{ isUploading ? 'Uploading...' : 'Choose Image' }}
-        </div>
-      </div>
-    </label>
-  </div>
+  <Uploader :server="uploadUrl" :media="initialMedia" @change="onChanged" :max="props.max ?? 1" />
 </template>

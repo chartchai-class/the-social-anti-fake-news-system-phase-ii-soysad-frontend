@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useNewsDetailStore } from '@/stores/newsDetailStore'
 import { VoteType } from '@/types'
@@ -31,17 +31,6 @@ const { value: comment } = useField<string>('comment')
 const { value: voteType, setValue: setVote } = useField<VoteType | null>('voteType')
 
 const imageList = ref<string[]>([])
-const latestUpload = ref<string>('')
-
-watch(latestUpload, (val) => {
-  if (!val) return
-  if (val.startsWith('data:')) return
-
-  if (!imageList.value.includes(val)) {
-    imageList.value.push(val)
-  }
-  latestUpload.value = ''
-})
 
 const onSubmit = handleSubmit((values) => {
   isSubmitting.value = true
@@ -85,6 +74,7 @@ const onSubmit = handleSubmit((values) => {
               type="textarea"
               placeholder="Write down your comment here…"
               :error="errors.comment"
+              class="h-65"
             />
           </div>
 
@@ -121,17 +111,7 @@ const onSubmit = handleSubmit((values) => {
           <div>
             <label class="block text-sm font-medium text-zinc-300 mb-2">Image (Optional)</label>
 
-            <div v-if="imageList.length > 0">
-              <img
-                v-for="(img, index) in imageList"
-                :key="index"
-                :src="img"
-                alt="Attachment preview"
-                class="w-full max-w-sm h-48 object-cover rounded-lg border border-zinc-700 mb-3"
-              />
-            </div>
-
-            <ImageUpload v-model="latestUpload" />
+            <ImageUpload v-model="imageList" :max="3" />
           </div>
 
           <div class="pt-2 flex items-center justify-end gap-2">
