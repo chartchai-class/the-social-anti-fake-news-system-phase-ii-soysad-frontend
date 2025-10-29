@@ -42,7 +42,7 @@ const onSubmit = handleSubmit((values) => {
     .createNews(payload)
     .then((createdNews) => {
       alert('News created successfully!')
-      router.push({ name: 'news-detail', params: { id: createdNews.id } })
+      router.push({ name: 'detail', params: { id: createdNews.id } })
     })
     .catch((error) => {
       alert('Failed to create news: ' + error.message)

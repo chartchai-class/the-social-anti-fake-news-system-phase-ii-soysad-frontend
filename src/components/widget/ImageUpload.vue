@@ -69,7 +69,7 @@ const initialMedia = computed(() => {
   background-color: #3f3f46 !important;
 }
 :deep(.mu-plusbox:hover > .mu-plus-icon) {
-  color: #d4d4d8 !important;
+  color: #17171a !important;
 }
 :deep(.mu-plus-icon) {
   color: #71717a !important;
@@ -88,7 +88,7 @@ const initialMedia = computed(() => {
 }
 :deep(.mu-close-btn) {
   background: rgba(24, 24, 27, 0.7) !important;
-  color: #fafafa !important;
+  color: #252323 !important;
   border-radius: 50% !important;
   width: 20px !important;
   height: 20px !important;
