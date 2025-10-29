@@ -5,5 +5,5 @@ services:
       dockerfile: Dockerfile
     image: soysad-fontend:latest
     ports:
-      - '80:80'
+      - '8001:80'
     restart: unless-stopped
