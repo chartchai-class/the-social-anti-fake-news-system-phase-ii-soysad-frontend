@@ -9,13 +9,12 @@ import { mdiAlert, mdiCheckCircle } from '@mdi/js'
 const store = useNewsDetailStore()
 const NewsDetail = computed(() => store.news)
 
-function formatDateTime(isoOrNull: string | null | Date): string {
-  if (!isoOrNull) return 'Unpublished'
-
-  // eslint-disable-next-line
-  const d = new Date(isoOrNull as any)
-  if (isNaN(d.getTime())) return 'Unpublished'
-  return d.toLocaleString()
+const formatDate = (dateString: string | null | undefined) => {
+  if (!dateString) {
+    return 'N/A'
+  }
+  const date = new Date(dateString)
+  return date.toLocaleDateString()
 }
 </script>
 
@@ -59,12 +58,12 @@ function formatDateTime(isoOrNull: string | null | Date): string {
             <span aria-hidden="true">•</span>
 
             <time :datetime="String(NewsDetail.publishedAt)">
-              {{ formatDateTime(NewsDetail.publishedAt as any) }}
+              {{ formatDate(NewsDetail.publishedAt as any) }}
             </time>
           </div>
         </header>
         <figure v-if="NewsDetail.mainImageUrl" class="mt-6">
-          <div class="rounded-lg border border-zinc-200 overflow-hidden">
+          <div class="rounded-lg border border-zinc-900 overflow-hidden">
             <img
               :src="NewsDetail.mainImageUrl"
               class="w-full h-auto object-cover"

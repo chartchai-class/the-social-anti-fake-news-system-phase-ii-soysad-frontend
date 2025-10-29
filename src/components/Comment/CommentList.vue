@@ -44,6 +44,11 @@ const showsComments = computed(() => {
 })
 
 function onManageComment(id: number) {
+  if (mode.value !== 'deleted') {
+    if (!window.confirm('Are you sure you want to delete this comment?')) {
+      return
+    }
+  }
   const action = mode.value === 'deleted' ? store.restoreComment(id) : store.removeComment(id)
 
   action

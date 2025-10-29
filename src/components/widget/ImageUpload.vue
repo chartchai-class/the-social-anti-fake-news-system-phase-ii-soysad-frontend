@@ -42,5 +42,61 @@ const initialMedia = computed(() => {
 </script>
 
 <template>
-  <Uploader :server="uploadUrl" :media="initialMedia" @change="onChanged" :max="props.max ?? 1" />
+  <Uploader
+    :server="uploadUrl"
+    :media="initialMedia"
+    @change="onChanged"
+    :max="props.max ?? 1"
+    class="mu-container"
+  />
 </template>
+
+<style scoped>
+:deep(.mu-container) {
+  background-color: #18181b !important;
+  border: 1px solid #27272a !important;
+}
+:deep(.mu-elements-wraper) {
+  padding: 1rem !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+:deep(.mu-plusbox) {
+  background-color: #27272a !important;
+  border: 1px dashed #3f3f46 !important;
+}
+:deep(.mu-plusbox:hover) {
+  background-color: #3f3f46 !important;
+}
+:deep(.mu-plusbox:hover > .mu-plus-icon) {
+  color: #d4d4d8 !important;
+}
+:deep(.mu-plus-icon) {
+  color: #71717a !important;
+  font-size: 3rem !important;
+  flex: 1;
+}
+:deep(.mu-image-container) {
+  width: 140px !important;
+  height: 90px !important;
+}
+:deep(.mu-images-preview) {
+  border-radius: 5px !important;
+  border: 1px solid #3f3f46 !important;
+  object-fit: cover;
+  object-position: center;
+}
+:deep(.mu-close-btn) {
+  background: rgba(24, 24, 27, 0.7) !important;
+  color: #fafafa !important;
+  border-radius: 50% !important;
+  width: 20px !important;
+  height: 20px !important;
+  top: 5px;
+  right: 5px;
+}
+:deep(.mu-close-btn:hover) {
+  background: #dc2626 !important;
+  color: #fff !important;
+}
+</style>

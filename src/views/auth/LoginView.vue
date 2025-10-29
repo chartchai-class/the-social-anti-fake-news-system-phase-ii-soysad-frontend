@@ -3,7 +3,7 @@ import InputText from '@/components/widget/InputText.vue'
 import * as yup from 'yup'
 import { useField, useForm } from 'vee-validate'
 import { useAuthStore } from '@/stores/auth'
-import router from '@/router'
+// import router from '@/router'
 // import { onMounted } from 'vue'
 
 const authStore = useAuthStore()
@@ -31,7 +31,6 @@ const onSubmit = handleSubmit((values) => {
     .login(values.username, values.password)
     .then(() => {
       console.log('Login successful')
-      router.push({ name: 'home' })
     })
     .catch((error) => {
       alert('Login failed: ' + error.message)

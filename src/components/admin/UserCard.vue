@@ -53,7 +53,7 @@ watch(selectedRole, (newRole, oldRole) => {
         user.profileImageUrl ||
         'https://i.pinimg.com/736x/b9/c4/7e/b9c47ef70bff06613d397abfce02c6e7.jpg'
       "
-      class="w-16 h-16 rounded-full object-cover border-2 border-zinc-600"
+      class="w-16 h-16 rounded-full object-cover"
     />
 
     <div class="flex-grow">

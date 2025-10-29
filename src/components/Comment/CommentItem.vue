@@ -51,7 +51,7 @@ const hasImages = computed(() => images.value.length > 0)
               {{ props.comment.author.name }} {{ props.comment.author.surname }}
               <span
                 v-if="isMine"
-                class="ml-2 text-emerald-400 text-xs font-medium bg-emerald-900/40 px-2 py-0.5 rounded-full"
+                class="ml-2 text-white text-xs font-medium bg-emerald-500 px-2 py-0.5 rounded-full"
                 >You
               </span>
             </div>

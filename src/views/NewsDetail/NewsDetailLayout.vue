@@ -5,11 +5,15 @@ import { useRoute, useRouter, RouterView } from 'vue-router'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiNewspaperVariantOutline, mdiCommentOutline, mdiArrowLeft, mdiCancel } from '@mdi/js'
 import { useNewsDetailStore } from '@/stores/newsDetailStore'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const store = useNewsDetailStore()
 const route = useRoute()
 const canGoVote = computed(() => store.canGoVote && !store.loading)
+const authStore = useAuthStore()
+const { isLoggedIn } = storeToRefs(authStore)
 
 function load() {
   const id = Number(route.params.id)
@@ -17,6 +21,12 @@ function load() {
     store.loadNewsByID(id).catch(() => {})
   }
 }
+
+const voteState = computed<'login' | 'loading' | 'can' | 'already'>(() => {
+  if (!isLoggedIn.value) return 'login'
+  if (store.loading) return 'loading'
+  return store.canGoVote ? 'can' : 'already'
+})
 
 onMounted(load)
 watch(() => route.params.id, load)
@@ -33,7 +43,6 @@ function goBack() {
   router.push({ name: 'home' })
 }
 </script>
-
 <template>
   <div class="mx-auto max-w-5xl px-4 py-6">
     <nav class="sticky top-20 z-10">
@@ -61,20 +70,31 @@ function goBack() {
 
           <li>
             <RouterLink
-              v-if="canGoVote"
+              v-if="voteState === 'can'"
               :to="{ name: 'vote' }"
               class="inline-flex items-center gap-2 rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700 px-4 py-2 text-sm transition-colors"
               :class="isActive('vote')"
+              title="Comment & Vote"
             >
               <SvgIcon type="mdi" :path="mdiCommentOutline" size="18" />
               <span>Comment &amp; Vote</span>
             </RouterLink>
 
             <button
+              v-else-if="voteState === 'login'"
+              @click="router.push({ name: 'login' })"
+              class="inline-flex items-center gap-2 backdrop-blur-sm rounded-full px-4 py-2 text-sm border bg-zinc-800/50 border-zinc-700 text-zinc-100 hover:bg-zinc-700"
+              title="Please login to comment and vote."
+            >
+              <SvgIcon type="mdi" :path="mdiCommentOutline" size="18" />
+              <span>Login to Vote</span>
+            </button>
+
+            <button
               v-else
               disabled
               class="inline-flex items-center gap-2 backdrop-blur-sm rounded-full px-4 py-2 text-sm cursor-not-allowed border bg-zinc-800/50 border-zinc-700 text-zinc-100"
-              title="You haven't logged in yet or you've already commented."
+              title="You already voted."
             >
               <SvgIcon type="mdi" :path="mdiCancel" size="18" />
               <span>You already voted</span>
