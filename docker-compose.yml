@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: soysad-vue-app:latest
+    ports:
+      - '80:80'
+    restart: unless-stopped

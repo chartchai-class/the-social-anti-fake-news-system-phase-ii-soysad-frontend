@@ -1,9 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 @import 'tailwindcss';
+
 @layer base {
   html {
-    @apply bg-[#1d1d1f] text-white;
+    @apply text-white;
+    background-image: url('https://xapqrepwfmjcrtcsmqzh.supabase.co/storage/v1/object/public/sadboy/6194995.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
     font-family:
       -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    color-scheme: light;
   }
+}
+
+#nprogress .bar {
+  background: #5001ce !important;
+
+  height: 7px !important;
 }
