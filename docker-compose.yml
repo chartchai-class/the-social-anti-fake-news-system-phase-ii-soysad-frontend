@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: soysad-fontend:latest
+    image: thechef2546/soysad-fontend:latest
     ports:
       - '8001:80'
     restart: unless-stopped
