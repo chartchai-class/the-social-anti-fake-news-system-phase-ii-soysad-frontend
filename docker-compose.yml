@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: soysad-vue-app:latest
+    image: soysad-fontend:latest
     ports:
       - '80:80'
     restart: unless-stopped
