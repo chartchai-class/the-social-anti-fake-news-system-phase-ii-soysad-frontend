@@ -11,7 +11,7 @@ import { storeToRefs } from 'pinia'
 const router = useRouter()
 const store = useNewsDetailStore()
 const route = useRoute()
-const canGoVote = computed(() => store.canGoVote && !store.loading)
+// const canGoVote = computed(() => store.canGoVote && !store.loading)
 const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
 
