@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NewListView from '@/views/NewListView.vue'
 
+import { useAuthStore } from '@/stores/auth'
+import NProgress from 'nprogress'
+import NewListView from '@/views/NewsList/NewListView.vue'
+import NewsView from '@/views/NewsDetail/NewsDetailLayout.vue'
+import DetailView from '@/views/NewsDetail/DetailView.vue'
+import VoteView from '@/views/NewsDetail/VoteView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,14 +17,74 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue'),
+      component: () => import('@/views/auth/LoginView.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('@/views/RegisterView.vue'),
+      component: () => import('@/views/auth/RegisterView.vue'),
+    },
+    {
+      path: '/create-news',
+      name: 'create-news',
+      component: () => import('../views/NewsList/CreateNewsView.vue'),
+
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore()
+        if (authStore.isLoggedIn && (authStore.isMember || authStore.isAdmin)) {
+          next()
+        } else {
+          next({ name: 'home' })
+        }
+      },
+    },
+    {
+      path: '/admin',
+      name: 'admin-layout',
+      component: () => import('@/views/BackOffice/AdminLayout.vue'),
+      children: [
+        {
+          path: '',
+          redirect: { name: 'admin-users' },
+        },
+        {
+          path: 'users',
+          name: 'admin-users',
+          component: () => import('@/views/BackOffice/MannageUserRole.vue'),
+        },
+        {
+          path: 'posts',
+          name: 'admin-posts',
+          component: () => import('@/views/BackOffice/MannageDelNews.vue'),
+        },
+      ],
+    },
+    {
+      path: '/news/:id',
+      name: 'news',
+      component: NewsView,
+      redirect: (to) => ({ name: 'detail', params: to.params }),
+      children: [
+        {
+          path: '',
+          name: 'detail',
+          component: DetailView,
+        },
+        {
+          path: 'vote',
+          name: 'vote',
+          component: VoteView,
+        },
+      ],
     },
   ],
 })
+NProgress.configure({ showSpinner: false })
+router.beforeEach(() => {
+  NProgress.start()
+})
 
+router.afterEach(() => {
+  NProgress.done()
+})
 export default router

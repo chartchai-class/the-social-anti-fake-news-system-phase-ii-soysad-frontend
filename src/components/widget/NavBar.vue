@@ -1,0 +1,80 @@
+<script setup lang="ts">
+/* eslint-disable */
+import { RouterLink } from 'vue-router'
+// @ts-ignore
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiLogin, mdiAccountPlus, mdiLogout, mdiCog } from '@mdi/js'
+import router from '@/router'
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
+import AdminLayout from '@/views/BackOffice/AdminLayout.vue'
+
+const authStore = useAuthStore()
+const isLoggedIn = computed(() => authStore.isLoggedIn)
+const currentUser = computed(() => authStore.currentUser)
+const isAdmin = computed(() => authStore.isAdmin)
+
+function logout() {
+  authStore.logout()
+}
+</script>
+<template>
+  <header
+    class="bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 shadow-sm sticky top-0 z-50"
+  >
+    <nav class="container mx-auto flex justify-between items-center px-6 py-4">
+      <RouterLink
+        :to="{ name: 'home' }"
+        class="text-2xl font-semibold text-white hover:text-indigo-600 transition-colors"
+      >
+        SoYSaD
+      </RouterLink>
+
+      <div class="ml-auto mr-5">
+        <RouterLink :to="{ name: 'admin-layout' }">
+          <div
+            v-if="isAdmin"
+            class="text-white bg-orange-600 hover:bg-orange-500 px-3 py-2 rounded-full text-sm sm:text-base"
+          >
+            <span class="hidden sm:inline">Admin </span>
+            <SvgIcon type="mdi" :path="mdiCog" class="inline" />
+          </div>
+        </RouterLink>
+      </div>
+      <ul v-if="isLoggedIn && currentUser" class="flex items-center space-x-4">
+        <img :src="currentUser.profileImageUrl" class="w-10 h-10 rounded-full object-cover" />
+        <li class="nav-item px-2 text-white hidden sm:inline">
+          Hi, {{ currentUser.name }} {{ currentUser.surname }} ({{ currentUser.roles.join(', ') }})
+        </li>
+        <li class="nav-item px-2">
+          <a @click="logout" class="nav-link cursor-pointer">
+            <div class="flex items-center text-red-400 hover:text-red-300">
+              <SvgIcon type="mdi" :path="mdiLogout" />
+              <span class="ml-3">Logout</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <ul v-else class="flex navbar-nav ml-auto">
+        <li class="nav-item px-2">
+          <router-link to="/register" class="nav-link">
+            <div class="flex items-center text-white hover:text-indigo-600">
+              <SvgIcon type="mdi" :path="mdiAccountPlus" />
+              <span class="ml-3">Sign Up</span>
+            </div>
+          </router-link>
+        </li>
+
+        <li class="nav-item px-2">
+          <router-link to="/login" class="nav-link">
+            <div class="flex items-center text-white hover:text-indigo-600">
+              <SvgIcon type="mdi" :path="mdiLogin" />
+              <span class="ml-3">Login</span>
+            </div>
+          </router-link>
+        </li>
+      </ul>
+    </nav>
+  </header>
+</template>
